@@ -21,6 +21,22 @@ namespace ILang.Classes
 				return (int) l.LiteralToken.Value;
 			}
 
+			if (node is UnaryExpressionSyntax u)
+			{
+				var operand = EvaluateExpression(u.Operand);
+
+				switch (u.OperatorToken.Kind)
+				{
+					case SyntaxKind.PlusToken:
+						return operand;
+					
+					case SyntaxKind.MinusToken:
+						return -operand;
+				}
+
+				throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}");
+			}
+
 			if (node is BinaryExpressionSyntax b)
 			{
 				var left = EvaluateExpression(b.Left);

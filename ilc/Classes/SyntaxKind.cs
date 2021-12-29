@@ -16,6 +16,7 @@ namespace ILang.Classes
 
 		// Expressions
 		LiteralExpression,
+		UnaryExpression,
 		BinaryExpression,
 		ParenthesizedExpression
 	}
