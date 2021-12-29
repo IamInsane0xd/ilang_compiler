@@ -1,0 +1,15 @@
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ilc.exe
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ilc.deps.json
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ilc.runtimeconfig.json
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ilc.dll
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ref\ilc.dll
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ilc.pdb
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.csproj.AssemblyReference.cache
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.GeneratedMSBuildEditorConfig.editorconfig
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.AssemblyInfoInputs.cache
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.AssemblyInfo.cs
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.csproj.CoreCompileInputs.cache
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.dll
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ref\ilc.dll
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.pdb
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.genruntimeconfig.cache
