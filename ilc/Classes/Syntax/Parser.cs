@@ -96,12 +96,19 @@ namespace ILang.Classes.Syntax
 
 		private ExpressionSyntax ParsePrimaryExpression()
 		{
-			if (Current.Kind == SyntaxKind.OpenParenthesisToken)
+			switch (Current.Kind)
 			{
-				var left = NextToken();
-				var expression = ParseExpression();
-				var right = MatchToken(SyntaxKind.CloseParenthesisToken);
-				return new ParenthesizedExpressionSyntax(left, expression, right);
+				case SyntaxKind.OpenParenthesisToken:
+					var left = NextToken();
+					var expression = ParseExpression();
+					var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+					return new ParenthesizedExpressionSyntax(left, expression, right);
+
+				case SyntaxKind.TrueKeyword:
+				case SyntaxKind.FalseKeyword:
+					var keywordToken = NextToken();
+					var value = Current.Kind == SyntaxKind.TrueKeyword;
+					return new LiteralExpressionSyntax(keywordToken, value);
 			}
 
 			var numberToken = MatchToken(SyntaxKind.NumberToken);

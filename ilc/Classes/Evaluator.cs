@@ -11,12 +11,12 @@ namespace ILang.Classes
 			_root = root;
 		}
 
-		public int Evaluate() => EvaluateExpression(_root);
+		public object Evaluate() => EvaluateExpression(_root);
 
-		private int EvaluateExpression(BoundExpression node)
+		private object EvaluateExpression(BoundExpression node)
 		{
 			if (node is BoundLiteralExpression l)
-				return (int) l.Value;
+				return l.Value;
 
 			if (node is BoundUnaryExpression u)
 			{
@@ -25,10 +25,10 @@ namespace ILang.Classes
 				switch (u.OperatorKind)
 				{
 					case BoundUnaryOperatorKind.Identity:
-						return operand;
+						return (int) operand;
 					
 					case BoundUnaryOperatorKind.Negation:
-						return -operand;
+						return -(int) operand;
 				}
 
 				throw new Exception($"Unexpected unary operator {u.OperatorKind}");
@@ -42,16 +42,16 @@ namespace ILang.Classes
 				switch (b.OperatorKind)
 				{
 					case BoundBinaryOperatorKind.Addition:
-						return left + right;
+						return (int) left + (int) right;
 					
 					case BoundBinaryOperatorKind.Subtraction:
-						return left - right;
+						return (int) left - (int) right;
 					
 					case BoundBinaryOperatorKind.Multiplication:
-						return left * right;
+						return (int) left * (int) right;
 					
 					case BoundBinaryOperatorKind.Division:
-						return left / right;
+						return (int) left / (int) right;
 				}
 
 				throw new Exception($"Unexpected binary operator {b.OperatorKind}");
