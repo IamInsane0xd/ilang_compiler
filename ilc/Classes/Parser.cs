@@ -14,7 +14,7 @@ namespace ILang.Classes
 
 			do
 			{
-				token = lexer.NextToken();
+				token = lexer.Lex();
 
 				if (token.Kind != SyntaxKind.WhiteSpaceToken && token.Kind != SyntaxKind.BadToken)
 					tokens.Add(token);

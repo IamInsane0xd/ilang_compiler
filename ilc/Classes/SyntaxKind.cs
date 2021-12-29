@@ -15,7 +15,7 @@ namespace ILang.Classes
 		CloseParenthesisToken,
 
 		// Expressions
-		NumberExpression,
+		LiteralExpression,
 		BinaryExpression,
 		ParenthesizedExpression
 	}
