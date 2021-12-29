@@ -1,4 +1,5 @@
 ﻿using ILang.Classes;
+using ILang.Classes.Syntax;
 
 namespace ILang
 {

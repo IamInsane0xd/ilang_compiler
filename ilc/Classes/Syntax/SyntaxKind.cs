@@ -1,4 +1,4 @@
-namespace ILang.Classes
+namespace ILang.Classes.Syntax
 {
 	public enum SyntaxKind
 	{
