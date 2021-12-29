@@ -7,14 +7,27 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "ilc/1.0.0": {
+        "dependencies": {
+          "ILang": "1.0.0"
+        },
         "runtime": {
           "ilc.dll": {}
+        }
+      },
+      "ILang/1.0.0": {
+        "runtime": {
+          "ILang.dll": {}
         }
       }
     }
   },
   "libraries": {
     "ilc/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ILang/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

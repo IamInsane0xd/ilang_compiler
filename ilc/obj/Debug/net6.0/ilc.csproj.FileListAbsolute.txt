@@ -13,3 +13,6 @@ E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.dll
 E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ref\ilc.dll
 E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.pdb
 E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.genruntimeconfig.cache
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ILang.dll
+E:\programming\big_projects\ilang_compiler\ilc\bin\Debug\net6.0\ILang.pdb
+E:\programming\big_projects\ilang_compiler\ilc\obj\Debug\net6.0\ilc.csproj.CopyComplete

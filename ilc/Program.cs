@@ -1,5 +1,4 @@
 ﻿using ILang.Classes;
-using ILang.Classes.Binding;
 using ILang.Classes.Syntax;
 
 namespace ILang
@@ -34,9 +33,9 @@ namespace ILang
 				}
 
 				var syntaxTree = SyntaxTree.Parse(line);
-				var binder = new Binder();
-				var boundExpression = binder.BindExpression(syntaxTree.Root);
-				IReadOnlyList<string> diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+				var compilation = new Compilation(syntaxTree);
+				var result = compilation.Evaluate();
+				var diagnostics = result.Diagnostics;
 
 				if (showTree)
 				{
@@ -47,10 +46,7 @@ namespace ILang
 
 				if (!diagnostics.Any())
 				{
-					var evaluator = new Evaluator(boundExpression);
-					var result = evaluator.Evaluate();
-
-					Console.WriteLine(result);
+					Console.WriteLine(result.Value);
 				}
 
 				else
