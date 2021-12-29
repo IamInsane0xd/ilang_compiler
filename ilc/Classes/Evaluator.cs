@@ -22,7 +22,10 @@ namespace ILang.Classes
 			{
 				var operand = EvaluateExpression(u.Operand);
 
-				switch (u.OperatorKind)
+				if (u.Op == null)
+					throw new Exception($"Operator is null");
+
+				switch (u.Op.Kind)
 				{
 					case BoundUnaryOperatorKind.Identity:
 						return (int) operand;
@@ -34,7 +37,7 @@ namespace ILang.Classes
 						return !(bool) operand;
 				}
 
-				throw new Exception($"Unexpected unary operator {u.OperatorKind}");
+				throw new Exception($"Unexpected unary operator {u.Op}");
 			}
 
 			if (node is BoundBinaryExpression b)
@@ -42,7 +45,10 @@ namespace ILang.Classes
 				var left = EvaluateExpression(b.Left);
 				var right = EvaluateExpression(b.Right);
 
-				switch (b.OperatorKind)
+				if (b.Op == null)
+					throw new Exception($"Operator is null");
+
+				switch (b.Op.Kind)
 				{
 					case BoundBinaryOperatorKind.Addition:
 						return (int) left + (int) right;
@@ -63,7 +69,7 @@ namespace ILang.Classes
 						return (bool) left || (bool) right;
 				}
 
-				throw new Exception($"Unexpected binary operator {b.OperatorKind}");
+				throw new Exception($"Unexpected binary operator {b.Op}");
 			}
 
 			throw new Exception($"Unexpected node {node.Kind}");
