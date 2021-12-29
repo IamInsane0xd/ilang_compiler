@@ -29,6 +29,9 @@ namespace ILang.Classes
 					
 					case BoundUnaryOperatorKind.Negation:
 						return -(int) operand;
+					
+					case BoundUnaryOperatorKind.LogicalNegation:
+						return !(bool) operand;
 				}
 
 				throw new Exception($"Unexpected unary operator {u.OperatorKind}");
@@ -52,6 +55,12 @@ namespace ILang.Classes
 					
 					case BoundBinaryOperatorKind.Division:
 						return (int) left / (int) right;
+					
+					case BoundBinaryOperatorKind.LogicalAnd:
+						return (bool) left && (bool) right;
+
+					case BoundBinaryOperatorKind.LogicalOr:
+						return (bool) left || (bool) right;
 				}
 
 				throw new Exception($"Unexpected binary operator {b.OperatorKind}");

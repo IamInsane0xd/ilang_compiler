@@ -5,6 +5,8 @@ namespace ILang.Classes.Binding
 		Addition,
 		Subtraction,
 		Multiplication,
-		Division
+		Division,
+		LogicalAnd,
+		LogicalOr
 	}
 }
