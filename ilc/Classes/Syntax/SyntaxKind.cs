@@ -14,6 +14,8 @@ namespace ILang.Classes.Syntax
 		BangToken,
 		AmpersandAmpersandToken,
 		PipePipeToken,
+		EqualsEqualsToken,
+		BangEqualsToken,
 		OpenParenthesisToken,
 		CloseParenthesisToken,
 		IdentifierToken,

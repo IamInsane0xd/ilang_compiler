@@ -2,16 +2,16 @@ namespace ILang.Classes.Binding
 {
 	internal sealed class BoundUnaryExpression : BoundExpression
 	{
-		public BoundUnaryExpression(BoundUnaryOperator? op, BoundExpression operand)
+		public BoundUnaryExpression(BoundUnaryOperator op, BoundExpression operand)
 		{
 			Op = op;
 			Operand = operand;
 		}
 
-		public override Type Type => Operand.Type;
+		public override Type Type => Op.Type;
 		public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
 
-		public BoundUnaryOperator? Op { get; }
+		public BoundUnaryOperator Op { get; }
 		public BoundExpression Operand { get; }
 	}
 }
