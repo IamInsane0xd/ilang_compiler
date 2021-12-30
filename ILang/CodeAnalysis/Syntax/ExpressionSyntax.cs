@@ -1,6 +1,5 @@
-namespace ILang.CodeAnalysis.Syntax
+namespace ILang.CodeAnalysis.Syntax;
+
+public abstract class ExpressionSyntax : SyntaxNode
 {
-	public abstract class ExpressionSyntax : SyntaxNode
-	{
-	}
 }
