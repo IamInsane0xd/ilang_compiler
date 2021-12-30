@@ -123,7 +123,7 @@ namespace ILang.Classes.Syntax
 						return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==", null);
 					}
 
-					break;
+					return new SyntaxToken(SyntaxKind.EqualsToken, _position++, "=", null);
 				
 				case '!':
 					if (Lookahead == '=')
@@ -132,8 +132,7 @@ namespace ILang.Classes.Syntax
 						return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "==", null);
 					}
 
-					_position++;
-					return new SyntaxToken(SyntaxKind.BangToken, start, "!", null);
+					return new SyntaxToken(SyntaxKind.BangToken, _position++, "!", null);
 			}
 
 			_diagnostics.ReportBadCharacter(_position, Current);
