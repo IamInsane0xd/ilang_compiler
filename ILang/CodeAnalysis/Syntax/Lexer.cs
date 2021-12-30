@@ -129,7 +129,7 @@ internal sealed class Lexer
 				if (Lookahead == '=')
 				{
 					_position += 2;
-					return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "==", null);
+					return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=", null);
 				}
 
 				return new SyntaxToken(SyntaxKind.BangToken, _position++, "!", null);
