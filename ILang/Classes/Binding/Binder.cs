@@ -44,7 +44,11 @@ namespace ILang.Classes.Binding
 
 		private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
 		{
-			var value = syntax.Value ?? 0;
+			var value = syntax.Value;
+
+			if (value == null)
+				throw new ArgumentNullException(nameof(value));
+
 			return new BoundLiteralExpression(value);
 		}
 
