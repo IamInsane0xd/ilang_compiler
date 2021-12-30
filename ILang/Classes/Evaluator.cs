@@ -57,14 +57,11 @@ namespace ILang.Classes
 
 			if (node is BoundBinaryExpression b)
 			{
-				var left = EvaluateExpression(b.Left);
-				var right = EvaluateExpression(b.Right);
+				var left = EvaluateExpression(b.Left) ?? 0;
+				var right = EvaluateExpression(b.Right) ?? 0;
 
 				if (b.Op == null)
 					throw new ArgumentNullException(nameof(b.Op));
-
-				if (left == null || right == null)
-					throw new ArgumentNullException(left == null ? nameof(left) : nameof(right));
 
 				switch (b.Op.Kind)
 				{
@@ -78,6 +75,9 @@ namespace ILang.Classes
 						return (int) left * (int) right;
 					
 					case BoundBinaryOperatorKind.Division:
+						if ((int)right == 0)
+							return 0;
+
 						return (int) left / (int) right;
 					
 					case BoundBinaryOperatorKind.LogicalAnd:
