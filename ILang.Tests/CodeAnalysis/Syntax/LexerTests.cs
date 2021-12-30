@@ -8,16 +8,32 @@ namespace ILang.Tests.CodeAnalysis.Syntax;
 
 public class LexerTests
 {
-  [Theory]
-  [MemberData(nameof(GetTokensData))]
-  public void LexerLexesToken(SyntaxKind kind, string text)
+  [Fact]
+  public void LexerTestsAllTokens()
   {
-    var tokens = SyntaxTree.ParseTokens(text);
-    var token = Assert.Single(tokens);
+		var tokenKinds = Enum.GetValues(typeof(SyntaxKind))
+												 .Cast<SyntaxKind>()
+												 .Where(k => k.ToString().EndsWith("Keyword") || k.ToString().EndsWith("Token"));
+		var testedTokenKinds = GetTokens().Concat(GetSeparators()).Select(t => t.kind);
+		var untestedTokenKinds = new SortedSet<SyntaxKind>(tokenKinds);
 
-    Assert.Equal(kind, token.Kind);
-    Assert.Equal(text, token.Text);
+		untestedTokenKinds.Remove(SyntaxKind.BadToken);
+		untestedTokenKinds.Remove(SyntaxKind.EndOfFileToken);
+		untestedTokenKinds.ExceptWith(testedTokenKinds);
+
+		Assert.Empty(untestedTokenKinds);
   }
+
+	[Theory]
+	[MemberData(nameof(GetTokensData))]
+	public void LexerLexesToken(SyntaxKind kind, string text)
+	{
+		var tokens = SyntaxTree.ParseTokens(text);
+		var token = Assert.Single(tokens);
+
+		Assert.Equal(kind, token.Kind);
+		Assert.Equal(text, token.Text);
+	}
 
 	[Theory]
 	[MemberData(nameof(GetTokenPairsData))]
