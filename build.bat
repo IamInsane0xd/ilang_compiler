@@ -1,4 +1,4 @@
 @echo off
-dotnet build && dotnet run --project ilc
+dotnet build && dotnet test .\ILang.Tests\ILang.Tests.csproj && dotnet run --project ilc
 @echo on
 
