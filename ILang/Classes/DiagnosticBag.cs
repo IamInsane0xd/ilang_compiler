@@ -28,28 +28,34 @@ namespace ILang.Classes
 			Report(span, message);
 		}
 
-		internal void ReportBadCharacter(int position, char current)
+		public void ReportBadCharacter(int position, char current)
 		{
 			var span = new TextSpan(position, 1);
 			var message = $"Error: bad character in input '{current}'";
 			Report(span, message);
 		}
 
-		internal void ReportUnexpectedToken(TextSpan span, SyntaxKind actualKind, SyntaxKind expectedKind)
+		public void ReportUnexpectedToken(TextSpan span, SyntaxKind actualKind, SyntaxKind expectedKind)
 		{
 			var message = $"Error: Unexpected token <{actualKind}>, expected <{expectedKind}>";
 			Report(span, message);
 		}
 
-		internal void ReportUndefinedUnaryOperator(TextSpan span, string? operatorText, Type operandType)
+		public void ReportUndefinedUnaryOperator(TextSpan span, string? operatorText, Type operandType)
 		{
 			var message = $"Error: Unary operator '{operatorText}' is not defined for type {operandType}";
 			Report(span, message);
 		}
 
-		internal void ReportUndefinedBinaryOperator(TextSpan span, string? operatorText, Type leftType, Type rightType)
+		public void ReportUndefinedBinaryOperator(TextSpan span, string? operatorText, Type leftType, Type rightType)
 		{
 			var message = $"Error: Binary operator '{operatorText}' is not defined for types {leftType} and {rightType}";
+			Report(span, message);
+		}
+
+		public void ReportUndefinedName(TextSpan span, string name)
+		{
+			var message = $"Variable '{name}' is not defined";
 			Report(span, message);
 		}
 	}

@@ -9,6 +9,6 @@ namespace ILang.Classes.Binding
 		LogicalAnd,
 		LogicalOr,
 		Equals,
-		NotEquals
+		NotEquals,
 	}
 }

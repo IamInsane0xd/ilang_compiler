@@ -4,6 +4,6 @@ namespace ILang.Classes.Binding
 	{
 		Identity,
 		Negation,
-		LogicalNegation
+		LogicalNegation,
 	}
 }

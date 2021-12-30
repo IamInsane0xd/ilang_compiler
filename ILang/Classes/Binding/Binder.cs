@@ -4,7 +4,13 @@ namespace ILang.Classes.Binding
 {
 	internal sealed class Binder
 	{
+		private readonly Dictionary<VariableSymbol, object?> _variables;
 		private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
+
+		public Binder(Dictionary<VariableSymbol, object?> variables)
+		{
+			_variables = variables;
+		}
 
 		public DiagnosticBag Diagnostics => _diagnostics;
 
@@ -14,7 +20,6 @@ namespace ILang.Classes.Binding
 			{
 				case SyntaxKind.ParenthesizedExpression:
 					return BindParenthesizedExpression((ParenthesizedExpressionSyntax) syntax);
-					//return BindExpression(((ParenthesizedExpressionSyntax) syntax).Expression);
 
 				case SyntaxKind.LiteralExpression:
 					return BindLiteralExpression((LiteralExpressionSyntax) syntax);
@@ -23,11 +28,11 @@ namespace ILang.Classes.Binding
 					return BindNameExpression((NameExpressionSyntax) syntax);
 				
 				case SyntaxKind.AssignmentExpression:
-					return BindAssignmentExpression((ParenthesizedExpressionSyntax) syntax);
+					return BindAssignmentExpression((AssignmentExpressionSyntax) syntax);
 
 				case SyntaxKind.UnaryExpression:
 					return BindUnaryExpression((UnaryExpressionSyntax) syntax);
-				
+
 				case SyntaxKind.BinaryExpression:
 					return BindBinaryExpression((BinaryExpressionSyntax) syntax);
 			}
@@ -45,12 +50,39 @@ namespace ILang.Classes.Binding
 
 		private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
 		{
-			throw new NotImplementedException();
+			var name = syntax.IdentifierToken.Text;
+			var variable = _variables.Keys.FirstOrDefault(v => v.Name == name);
+
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+
+			if (variable == null)
+			{
+				_diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+				return new BoundLiteralExpression(0);
+			}
+
+			return new BoundVariableExpression(variable);
 		}
 
-		private BoundExpression BindAssignmentExpression(ParenthesizedExpressionSyntax syntax)
+		private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax syntax)
 		{
-			throw new NotImplementedException();
+			string? name = syntax.IdentifierToken.Text;
+			var boundExpression = BindExpression(syntax.Expression);
+
+			if (name == null)
+				throw new ArgumentNullException(nameof(name));
+
+			var existingVariable = _variables.Keys.FirstOrDefault(v => v.Name == name);
+
+			if (existingVariable != null)
+				_variables.Remove(existingVariable);
+
+			var variable = new VariableSymbol(name, boundExpression.Type);
+
+			_variables[variable] = null;
+
+			return new BoundAssignmentExpression(variable, boundExpression);
 		}
 
 		private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax)

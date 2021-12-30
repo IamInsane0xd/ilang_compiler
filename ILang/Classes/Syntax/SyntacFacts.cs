@@ -23,7 +23,7 @@ namespace ILang.Classes.Syntax
 				case SyntaxKind.StarToken:
 				case SyntaxKind.SlashToken:
 					return 5;
-
+					
 				case SyntaxKind.PlusToken:
 				case SyntaxKind.MinusToken:
 					return 4;

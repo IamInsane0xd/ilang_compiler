@@ -5,25 +5,40 @@ namespace ILang.Classes
 	internal sealed class Evaluator
 	{
 		private readonly BoundExpression _root;
+		private readonly Dictionary<VariableSymbol, object?> _variables;
 
-		public Evaluator(BoundExpression root)
+		public Evaluator(BoundExpression root, Dictionary<VariableSymbol, object?> variables)
 		{
 			_root = root;
+			_variables = variables;
 		}
 
-		public object Evaluate() => EvaluateExpression(_root);
+		public object? Evaluate() => EvaluateExpression(_root);
 
-		private object EvaluateExpression(BoundExpression node)
+		private object? EvaluateExpression(BoundExpression node)
 		{
 			if (node is BoundLiteralExpression l)
 				return l.Value;
+
+			if (node is BoundVariableExpression v)
+				return _variables[v.Variable];
+
+			if (node is BoundAssignmentExpression a)
+			{
+				var value = EvaluateExpression(a.Expression);
+				_variables[a.Variable] = value;
+				return value;
+			}
 
 			if (node is BoundUnaryExpression u)
 			{
 				var operand = EvaluateExpression(u.Operand);
 
 				if (u.Op == null)
-					throw new Exception($"Operator is null");
+					throw new ArgumentNullException(nameof(u.Op));
+
+				if (operand == null)
+					throw new ArgumentNullException(nameof(operand));
 
 				switch (u.Op.Kind)
 				{
@@ -46,7 +61,10 @@ namespace ILang.Classes
 				var right = EvaluateExpression(b.Right);
 
 				if (b.Op == null)
-					throw new Exception($"Operator is null");
+					throw new ArgumentNullException(nameof(b.Op));
+
+				if (left == null || right == null)
+					throw new ArgumentNullException(left == null ? nameof(left) : nameof(right));
 
 				switch (b.Op.Kind)
 				{
