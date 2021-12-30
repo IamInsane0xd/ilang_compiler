@@ -59,7 +59,6 @@ public class ParserTests
 			foreach (var op2 in SyntacFacts.GetBinaryOperatorKinds())
 			{
 				yield return new object[] { op1, op2 };
-				yield break;
 			}
 	}
 }
