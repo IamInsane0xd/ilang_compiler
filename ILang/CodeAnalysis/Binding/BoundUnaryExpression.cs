@@ -1,17 +1,16 @@
-namespace ILang.CodeAnalysis.Binding
+namespace ILang.CodeAnalysis.Binding;
+
+internal sealed class BoundUnaryExpression : BoundExpression
 {
-	internal sealed class BoundUnaryExpression : BoundExpression
+	public BoundUnaryExpression(BoundUnaryOperator op, BoundExpression operand)
 	{
-		public BoundUnaryExpression(BoundUnaryOperator op, BoundExpression operand)
-		{
-			Op = op;
-			Operand = operand;
-		}
-
-		public override Type Type => Op.Type;
-		public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
-
-		public BoundUnaryOperator Op { get; }
-		public BoundExpression Operand { get; }
+		Op = op;
+		Operand = operand;
 	}
+
+	public override Type Type => Op.Type;
+	public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
+
+	public BoundUnaryOperator Op { get; }
+	public BoundExpression Operand { get; }
 }

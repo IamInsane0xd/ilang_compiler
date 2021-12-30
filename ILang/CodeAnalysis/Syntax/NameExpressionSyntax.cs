@@ -1,19 +1,18 @@
-namespace ILang.CodeAnalysis.Syntax
+namespace ILang.CodeAnalysis.Syntax;
+
+public sealed class NameExpressionSyntax : ExpressionSyntax
 {
-	public sealed class NameExpressionSyntax : ExpressionSyntax
+	public NameExpressionSyntax(SyntaxToken identifierToken)
 	{
-		public NameExpressionSyntax(SyntaxToken identifierToken)
-		{
-			IdentifierToken = identifierToken;
-		}
+		IdentifierToken = identifierToken;
+	}
 
-		public override SyntaxKind Kind => SyntaxKind.NameExpression;
+	public override SyntaxKind Kind => SyntaxKind.NameExpression;
 
-		public SyntaxToken IdentifierToken { get; }
+	public SyntaxToken IdentifierToken { get; }
 
-		public override IEnumerable<SyntaxNode> GetChildren()
-		{
-			yield return IdentifierToken;
-		}
+	public override IEnumerable<SyntaxNode> GetChildren()
+	{
+		yield return IdentifierToken;
 	}
 }

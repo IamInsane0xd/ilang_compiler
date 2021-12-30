@@ -1,11 +1,10 @@
-namespace ILang.CodeAnalysis.Binding
+namespace ILang.CodeAnalysis.Binding;
+
+internal enum BoundNodeKind
 {
-	internal enum BoundNodeKind
-	{
-		LiteralExpression,
-		VariableExpression,
-		AssignmentExpression,
-		UnaryExpression,
-		BinaryExpression,
-	}
+	LiteralExpression,
+	VariableExpression,
+	AssignmentExpression,
+	UnaryExpression,
+	BinaryExpression,
 }

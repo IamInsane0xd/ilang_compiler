@@ -1,14 +1,13 @@
-namespace ILang.CodeAnalysis
-{
-	public sealed class EvaluationResult
-	{
-		public EvaluationResult(IEnumerable<Diagnostic> diagnostics, object? value)
-		{
-			Diagnostics = diagnostics.ToArray();
-			Value = value;
-		}
+namespace ILang.CodeAnalysis;
 
-		public IReadOnlyList<Diagnostic> Diagnostics { get; }
-		public object? Value { get; }
+public sealed class EvaluationResult
+{
+	public EvaluationResult(IEnumerable<Diagnostic> diagnostics, object? value)
+	{
+		Diagnostics = diagnostics.ToArray();
+		Value = value;
 	}
+
+	public IReadOnlyList<Diagnostic> Diagnostics { get; }
+	public object? Value { get; }
 }

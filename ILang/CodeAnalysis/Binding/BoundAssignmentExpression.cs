@@ -1,17 +1,16 @@
-﻿namespace ILang.CodeAnalysis.Binding
+﻿namespace ILang.CodeAnalysis.Binding;
+
+internal sealed class BoundAssignmentExpression : BoundExpression
 {
-	internal sealed class BoundAssignmentExpression : BoundExpression
+	public BoundAssignmentExpression(VariableSymbol variable, BoundExpression expression)
 	{
-		public BoundAssignmentExpression(VariableSymbol variable, BoundExpression expression)
-		{
-			Variable = variable;
-			Expression = expression;
-		}
-
-		public override Type Type => Expression.Type;
-		public override BoundNodeKind Kind => BoundNodeKind.AssignmentExpression;
-
-		public VariableSymbol Variable { get; }
-		public BoundExpression Expression { get; }
+		Variable = variable;
+		Expression = expression;
 	}
+
+	public override Type Type => Expression.Type;
+	public override BoundNodeKind Kind => BoundNodeKind.AssignmentExpression;
+
+	public VariableSymbol Variable { get; }
+	public BoundExpression Expression { get; }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ilc", "ilc\ilc.csproj", "{D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILang", "ILang\ILang.csproj", "{8C672C8C-C508-4051-AFE3-5214C332C8EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILang.Tests", "ILang.Tests\ILang.Tests.csproj", "{68EDA1A7-1764-4E00-9D7D-BCC909C16204}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8C672C8C-C508-4051-AFE3-5214C332C8EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C672C8C-C508-4051-AFE3-5214C332C8EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C672C8C-C508-4051-AFE3-5214C332C8EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68EDA1A7-1764-4E00-9D7D-BCC909C16204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68EDA1A7-1764-4E00-9D7D-BCC909C16204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68EDA1A7-1764-4E00-9D7D-BCC909C16204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68EDA1A7-1764-4E00-9D7D-BCC909C16204}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

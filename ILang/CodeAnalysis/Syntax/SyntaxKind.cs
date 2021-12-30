@@ -1,36 +1,35 @@
-namespace ILang.CodeAnalysis.Syntax
+namespace ILang.CodeAnalysis.Syntax;
+
+public enum SyntaxKind
 {
-	public enum SyntaxKind
-	{
-		// Tokens
-		BadToken,
-		EndOfFileToken,
-		WhiteSpaceToken,
-		NumberToken,
-		PlusToken,
-		MinusToken,
-		StarToken,
-		SlashToken,
-		BangToken,
-		EqualsToken,
-		AmpersandAmpersandToken,
-		PipePipeToken,
-		EqualsEqualsToken,
-		BangEqualsToken,
-		OpenParenthesisToken,
-		CloseParenthesisToken,
-		IdentifierToken,
+	// Tokens
+	BadToken,
+	EndOfFileToken,
+	WhiteSpaceToken,
+	NumberToken,
+	PlusToken,
+	MinusToken,
+	StarToken,
+	SlashToken,
+	BangToken,
+	EqualsToken,
+	AmpersandAmpersandToken,
+	PipePipeToken,
+	EqualsEqualsToken,
+	BangEqualsToken,
+	OpenParenthesisToken,
+	CloseParenthesisToken,
+	IdentifierToken,
 
-		// Keywords
-		TrueKeyword,
-		FalseKeyword,
+	// Keywords
+	TrueKeyword,
+	FalseKeyword,
 
-		// Expressions
-		LiteralExpression,
-		NameExpression,
-		UnaryExpression,
-		BinaryExpression,
-		ParenthesizedExpression,
-		AssignmentExpression,
-	}
+	// Expressions
+	LiteralExpression,
+	NameExpression,
+	UnaryExpression,
+	BinaryExpression,
+	ParenthesizedExpression,
+	AssignmentExpression,
 }

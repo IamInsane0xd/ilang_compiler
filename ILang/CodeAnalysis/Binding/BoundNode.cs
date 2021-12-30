@@ -1,7 +1,6 @@
-namespace ILang.CodeAnalysis.Binding
+namespace ILang.CodeAnalysis.Binding;
+
+internal abstract class BoundNode
 {
-	internal abstract class BoundNode
-	{
-		public abstract BoundNodeKind Kind { get; }
-	}
+	public abstract BoundNodeKind Kind { get; }
 }
