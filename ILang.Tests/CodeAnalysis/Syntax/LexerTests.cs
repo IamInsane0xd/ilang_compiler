@@ -1,4 +1,5 @@
 using ILang.CodeAnalysis.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -67,28 +68,21 @@ public class LexerTests
 	}
 
 	private static IEnumerable<(SyntaxKind kind, string text)> GetTokens()
-	{                                      
-    return new[]                         
-    {                                    
-			(SyntaxKind.PlusToken, "+"),
-			(SyntaxKind.MinusToken, "-"),
-			(SyntaxKind.StarToken, "*"),
-			(SyntaxKind.SlashToken, "/"),
-			(SyntaxKind.BangToken, "!"),
-			(SyntaxKind.EqualsToken, "="),
-			(SyntaxKind.AmpersandAmpersandToken, "&&"),
-			(SyntaxKind.PipePipeToken, "||"),
-			(SyntaxKind.EqualsEqualsToken, "=="),
-			(SyntaxKind.BangEqualsToken, "!="),
-			(SyntaxKind.OpenParenthesisToken, "("),
-			(SyntaxKind.CloseParenthesisToken, ")"),
-			(SyntaxKind.TrueKeyword, "true"),
-			(SyntaxKind.FalseKeyword, "false"),
+	{
+		var fixedTokens = (IEnumerable<(SyntaxKind, string)>) Enum.GetValues(typeof(SyntaxKind))
+																															.Cast<SyntaxKind>()
+																															.Select(k => (kind: k, text: SyntacFacts.GetText(k)))
+																															.Where(t => t.text != null);
+
+    var dynamicTokens = new[]
+    {
 			(SyntaxKind.NumberToken, "1"),
 			(SyntaxKind.NumberToken, "123"),
 			(SyntaxKind.IdentifierToken, "a"),
 			(SyntaxKind.IdentifierToken, "abc")
 		};
+
+		return fixedTokens.Concat(dynamicTokens);
   }
 
 	private static IEnumerable<(SyntaxKind kind, string text)> GetSeparators()
