@@ -193,6 +193,7 @@ internal sealed class Lexer
 
 		var length = _position - _start;
 		var text = _text.Substring(_start, length);
+
 		_kind = SyntacFacts.GetKeywordKind(text);
 	}
 }
