@@ -53,12 +53,60 @@ public class ParserTests
 		}
 	}
 
+	[Theory]
+	[MemberData(nameof(GetUnaryOperatorPairsData))]
+	public void ParserUnaryExpressionHonorsPrecedences(SyntaxKind unaryKind, SyntaxKind binaryKind)
+	{
+		var unaryPrecedence = SyntacFacts.GetUnaryOperatorPrecedence(unaryKind);
+		var binaryPrecedence = SyntacFacts.GetBinaryOperatorPrecedence(binaryKind);
+		var unaryText = SyntacFacts.GetText(unaryKind);
+		var binaryText = SyntacFacts.GetText(binaryKind);
+		var text = $"{unaryText} a {binaryText} b";
+		var expression = SyntaxTree.Parse(text).Root;
+
+		if (unaryPrecedence >= binaryPrecedence)
+		{
+			using (var e = new AssertingEnumerator(expression))
+			{
+				e.AssertNode(SyntaxKind.BinaryExpression);
+				e.AssertNode(SyntaxKind.UnaryExpression);
+				e.AssertToken(unaryKind, unaryText ?? "");
+				e.AssertNode(SyntaxKind.NameExpression);
+				e.AssertToken(SyntaxKind.IdentifierToken, "a");
+				e.AssertToken(binaryKind, binaryText ?? "");
+				e.AssertNode(SyntaxKind.NameExpression);
+				e.AssertToken(SyntaxKind.IdentifierToken, "b");
+			}
+		}
+
+		else
+		{
+			using (var e = new AssertingEnumerator(expression))
+			{
+				e.AssertNode(SyntaxKind.UnaryExpression);
+				e.AssertToken(unaryKind, unaryText ?? "");
+				e.AssertNode(SyntaxKind.BinaryExpression);
+				e.AssertNode(SyntaxKind.NameExpression);
+				e.AssertToken(SyntaxKind.IdentifierToken, "a");
+				e.AssertToken(binaryKind, binaryText ?? "");
+				e.AssertNode(SyntaxKind.NameExpression);
+				e.AssertToken(SyntaxKind.IdentifierToken, "b");
+				e.AssertNode(SyntaxKind.NameExpression);
+			}
+		}
+	}
+
 	public static IEnumerable<object[]> GetBinaryOperatorPairsData()
 	{
 		foreach (var op1 in SyntacFacts.GetBinaryOperatorKinds())
 			foreach (var op2 in SyntacFacts.GetBinaryOperatorKinds())
-			{
 				yield return new object[] { op1, op2 };
-			}
+	}
+
+	public static IEnumerable<object[]> GetUnaryOperatorPairsData()
+	{
+		foreach (var unary in SyntacFacts.GetUnaryOperatorKinds())
+			foreach (var binary in SyntacFacts.GetBinaryOperatorKinds())
+				yield return new object[] { unary, binary };
 	}
 }
