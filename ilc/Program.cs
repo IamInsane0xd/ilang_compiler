@@ -51,12 +51,26 @@ namespace ILang
 
 				else
 				{
-					Console.ForegroundColor = ConsoleColor.DarkRed;
-
 					foreach (var diagnostic in diagnostics)
+					{
+						Console.ForegroundColor = ConsoleColor.DarkRed;
 						Console.WriteLine(diagnostic);
+						Console.ResetColor();
 
-					Console.ResetColor();
+						var prefix = line.Substring(0, diagnostic.Span.Start);
+						var error = diagnostic.Span.Start < line.Length ? line.Substring(diagnostic.Span.Start, diagnostic.Span.Length) : "";
+						var suffix = diagnostic.Span.End < line.Length ? line.Substring(diagnostic.Span.End) : "";
+
+						Console.Write("   ");
+						Console.Write(prefix);
+
+						Console.ForegroundColor = ConsoleColor.Red;
+						Console.Write(error);
+						Console.ResetColor();
+
+						Console.Write(suffix);
+						Console.WriteLine("\n");
+					}
 				}
 			}
 		}

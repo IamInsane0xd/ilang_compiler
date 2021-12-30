@@ -14,6 +14,7 @@ namespace ILang.Classes.Syntax
 		public int Position { get; }
 		public string? Text { get; }
 		public object? Value { get; }
+		public TextSpan Span => Text != null ? new TextSpan(Position, Text.Length) : throw new Exception("Text is null");
 
 		public override IEnumerable<SyntaxNode> GetChildren()
 		{
