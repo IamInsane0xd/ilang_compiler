@@ -5,7 +5,18 @@ namespace ILang.CodeAnalysis.Syntax;
 public abstract class SyntaxNode
 {
 	public abstract SyntaxKind Kind { get; }
-	public IEnumerable<SyntaxNode?> GetChildren()
+
+	public virtual TextSpan Span
+	{
+		get
+		{
+			var first = GetChildren().First().Span;
+			var last = GetChildren().Last().Span;
+			return TextSpan.FormBounds(first.Start, last.End);
+		}
+	}
+
+	public IEnumerable<SyntaxNode> GetChildren()
 	{
 		var properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -14,7 +25,7 @@ public abstract class SyntaxNode
 			if (typeof(SyntaxNode).IsAssignableFrom(property.PropertyType))
 			{
 				var child = (SyntaxNode?) property.GetValue(this);
-				yield return child;
+				yield return child ?? throw new ArgumentNullException(nameof(child));
 			}
 
 			else if (typeof(IEnumerable<SyntaxNode>).IsAssignableFrom(property.PropertyType))

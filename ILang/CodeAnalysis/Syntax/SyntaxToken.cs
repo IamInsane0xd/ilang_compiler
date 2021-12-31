@@ -14,5 +14,5 @@ public sealed class SyntaxToken : SyntaxNode
 	public int Position { get; }
 	public string? Text { get; }
 	public object? Value { get; }
-	public TextSpan Span => Text != null ? new TextSpan(Position, Text.Length) : throw new ArgumentNullException(nameof(Text));
+	public override TextSpan Span => Text != null ? new TextSpan(Position, Text.Length) : throw new ArgumentNullException(nameof(Text));
 }
