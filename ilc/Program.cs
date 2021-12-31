@@ -24,15 +24,15 @@ internal static class Program
 					showTree = !showTree;
 					Console.WriteLine(showTree ? "Showing parse tree" : "Not showing parse tree");
 					continue;
-					
+
 				case "#clear":
 					Console.Clear();
 					continue;
-					
+
 				case "#exit":
 					return;
 			}
-				
+
 			var syntaxTree = SyntaxTree.Parse(line);
 			var compilation = new Compilation(syntaxTree);
 			var result = compilation.Evaluate(variables);
@@ -82,7 +82,7 @@ internal static class Program
 		Console.Write(indent);
 		Console.Write(marker);
 		Console.Write(node.Kind);
-			
+
 		if (node is SyntaxToken t && t.Value != null)
 		{
 			Console.Write($" {t.Value}");
@@ -93,7 +93,7 @@ internal static class Program
 		indent += isFirst ? "" : isLast ? "   " : "│  ";
 
 		var lastChild = node.GetChildren().LastOrDefault();
-			
+
 		foreach (var child in node.GetChildren())
 			PrettyPrint(child, indent, child == lastChild, false);
 	}

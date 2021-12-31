@@ -8,9 +8,9 @@ namespace ILang.Tests.CodeAnalysis.Syntax;
 
 public class LexerTests
 {
-  [Fact]
-  public void LexerTestsAllTokens()
-  {
+	[Fact]
+	public void LexerTestsAllTokens()
+	{
 		var tokenKinds = Enum.GetValues(typeof(SyntaxKind))
 												 .Cast<SyntaxKind>()
 												 .Where(k => k.ToString().EndsWith("Keyword") || k.ToString().EndsWith("Token"));
@@ -22,7 +22,7 @@ public class LexerTests
 		untestedTokenKinds.ExceptWith(testedTokenKinds);
 
 		Assert.Empty(untestedTokenKinds);
-  }
+	}
 
 	[Theory]
 	[MemberData(nameof(GetTokensData))]
@@ -67,8 +67,8 @@ public class LexerTests
 
 	public static IEnumerable<object[]> GetTokensData()
 	{
-    foreach (var t in GetTokens().Concat(GetSeparators()))
-		  yield return new object[] { t.kind, t.text };
+		foreach (var t in GetTokens().Concat(GetSeparators()))
+			yield return new object[] { t.kind, t.text };
 	}
 
 	public static IEnumerable<object[]> GetTokenPairsData()
@@ -90,8 +90,8 @@ public class LexerTests
 																															.Select(k => (kind: k, text: SyntacFacts.GetText(k)))
 																															.Where(t => t.text != null);
 
-    var dynamicTokens = new[]
-    {
+		var dynamicTokens = new[]
+		{
 			(SyntaxKind.NumberToken, "1"),
 			(SyntaxKind.NumberToken, "123"),
 			(SyntaxKind.IdentifierToken, "a"),
@@ -99,7 +99,7 @@ public class LexerTests
 		};
 
 		return fixedTokens.Concat(dynamicTokens);
-  }
+	}
 
 	private static IEnumerable<(SyntaxKind kind, string text)> GetSeparators()
 	{

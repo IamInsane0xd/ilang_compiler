@@ -131,7 +131,7 @@ internal sealed class Lexer
 				ReadNumberToken();
 				break;
 
-			case ' ': 
+			case ' ':
 			case '\t':
 			case '\n':
 			case '\r':
@@ -147,8 +147,8 @@ internal sealed class Lexer
 
 				else
 				{
-				_diagnostics.ReportBadCharacter(_position, Current);
-				_position++;
+					_diagnostics.ReportBadCharacter(_position, Current);
+					_position++;
 				}
 
 				break;

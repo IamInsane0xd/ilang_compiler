@@ -1,5 +1,5 @@
-using System.Collections;
 using ILang.CodeAnalysis.Syntax;
+using System.Collections;
 
 namespace ILang.CodeAnalysis;
 

@@ -25,9 +25,9 @@ public class SyntaxFactTests
 
 	public static IEnumerable<object[]> GetSyntaxKindData()
 	{
-		var kinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
+		var kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
 
 		foreach (var kind in kinds)
-			yield return new object[] { kind }; 
+			yield return new object[] { kind };
 	}
 }
