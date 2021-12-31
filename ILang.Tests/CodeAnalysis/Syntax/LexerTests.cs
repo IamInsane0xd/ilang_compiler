@@ -152,17 +152,27 @@ public class LexerTests
 	private static IEnumerable<(SyntaxKind t1Kind, string t1Text, SyntaxKind t2Kind, string t2Text)> GetTokenPairs()
 	{
 		foreach (var t1 in GetTokens())
+		{
 			foreach (var t2 in GetTokens())
+			{
 				if (!RequiresSeparator(t1.kind, t2.kind))
 					yield return (t1.kind, t1.text, t2.kind, t2.text);
+			}
+		}
 	}
 
 	private static IEnumerable<(SyntaxKind t1Kind, string t1Text, SyntaxKind separatorKind, string separatorText, SyntaxKind t2Kind, string t2Text)> GetTokenPairsWithSeparator()
 	{
 		foreach (var t1 in GetTokens())
+		{
 			foreach (var t2 in GetTokens())
+			{
 				if (RequiresSeparator(t1.kind, t2.kind))
+				{
 					foreach (var s in GetSeparators())
 						yield return (t1.kind, t1.text, s.kind, s.text, t2.kind, t2.text);
+				}
+			}
+		}
 	}
 }

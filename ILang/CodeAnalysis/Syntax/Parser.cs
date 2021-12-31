@@ -93,7 +93,9 @@ internal sealed class Parser
 		}
 
 		else
+		{
 			left = ParsePrimaryExpression();
+		}
 
 		while (true)
 		{

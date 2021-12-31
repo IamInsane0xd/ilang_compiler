@@ -94,8 +94,9 @@ internal sealed class Lexer
 				_position++;
 
 				if (Current != '=')
+				{
 					_kind = SyntaxKind.EqualsToken;
-
+				}
 				else
 				{
 					_position++;
@@ -108,8 +109,9 @@ internal sealed class Lexer
 				_position++;
 
 				if (Current != '=')
+				{
 					_kind = SyntaxKind.BangToken;
-
+				}
 				else
 				{
 					_position++;
@@ -140,11 +142,13 @@ internal sealed class Lexer
 
 			default:
 				if (char.IsLetter(Current))
+				{
 					ReadIdentiferOrKeywordToken();
-
+				}
 				else if (char.IsWhiteSpace(Current))
+				{
 					ReadWhiteSpaceToken();
-
+				}
 				else
 				{
 					_diagnostics.ReportBadCharacter(_position, Current);

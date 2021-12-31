@@ -99,14 +99,18 @@ public class ParserTests
 	public static IEnumerable<object[]> GetBinaryOperatorPairsData()
 	{
 		foreach (var op1 in SyntacFacts.GetBinaryOperatorKinds())
+		{
 			foreach (var op2 in SyntacFacts.GetBinaryOperatorKinds())
 				yield return new object[] { op1, op2 };
+		}
 	}
 
 	public static IEnumerable<object[]> GetUnaryOperatorPairsData()
 	{
 		foreach (var unary in SyntacFacts.GetUnaryOperatorKinds())
+		{
 			foreach (var binary in SyntacFacts.GetBinaryOperatorKinds())
 				yield return new object[] { unary, binary };
+		}
 	}
 }
