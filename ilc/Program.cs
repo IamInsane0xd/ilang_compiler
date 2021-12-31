@@ -41,7 +41,7 @@ internal static class Program
 			if (showTree)
 			{
 				Console.ForegroundColor = ConsoleColor.DarkGray;
-				PrettyPrint(syntaxTree.Root);
+				syntaxTree.Root.WriteTo(Console.Out);
 				Console.ResetColor();
 			}
 
@@ -74,27 +74,5 @@ internal static class Program
 				}
 			}
 		}
-	}
-
-	static void PrettyPrint(SyntaxNode node, string indent = "", bool isLast = true, bool isFirst = true)
-	{
-		var marker = isLast ? isFirst ? "" : "└──" : "├──";
-		Console.Write(indent);
-		Console.Write(marker);
-		Console.Write(node.Kind);
-
-		if (node is SyntaxToken t && t.Value != null)
-		{
-			Console.Write($" {t.Value}");
-		}
-
-		Console.WriteLine();
-
-		indent += isFirst ? "" : isLast ? "   " : "│  ";
-
-		var lastChild = node.GetChildren().LastOrDefault();
-
-		foreach (var child in node.GetChildren())
-			PrettyPrint(child ?? throw new ArgumentNullException(nameof(child)), indent, child == lastChild, false);
 	}
 }

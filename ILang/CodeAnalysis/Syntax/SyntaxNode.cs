@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace ILang.CodeAnalysis.Syntax;
 
@@ -35,6 +35,39 @@ public abstract class SyntaxNode
 				foreach (var child in children ?? throw new ArgumentNullException(nameof(children)))
 					yield return child;
 			}
+		}
+	}
+
+	public void WriteTo(TextWriter writer) => PrettyPrint(writer, this);
+
+	private static void PrettyPrint(TextWriter writer, SyntaxNode node, string indent = "", bool isLast = true, bool isFirst = true)
+	{
+		var marker = isFirst ? "" : isLast ? "└──" : "├──";
+		writer.Write(indent);
+		writer.Write(marker);
+		writer.Write(node.Kind);
+
+		if (node is SyntaxToken t && t.Value != null)
+		{
+			writer.Write($" {t.Value}");
+		}
+
+		writer.WriteLine();
+
+		indent += isFirst ? "" : isLast ? "   " : "│  ";
+
+		var lastChild = node.GetChildren().LastOrDefault();
+
+		foreach (var child in node.GetChildren())
+			PrettyPrint(writer, child ?? throw new ArgumentNullException(nameof(child)), indent, child == lastChild, false);
+	}
+
+	public override string ToString()
+	{
+		using(var writer = new StringWriter())
+		{
+			WriteTo(writer);
+			return writer.ToString();
 		}
 	}
 }
