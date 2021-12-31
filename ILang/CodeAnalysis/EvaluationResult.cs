@@ -1,13 +1,15 @@
+using System.Collections.Immutable;
+
 namespace ILang.CodeAnalysis;
 
 public sealed class EvaluationResult
 {
-	public EvaluationResult(IEnumerable<Diagnostic> diagnostics, object? value)
+	public EvaluationResult(ImmutableArray<Diagnostic> diagnostics, object? value)
 	{
-		Diagnostics = diagnostics.ToArray();
+		Diagnostics = diagnostics;
 		Value = value;
 	}
 
-	public IReadOnlyList<Diagnostic> Diagnostics { get; }
+	public ImmutableArray<Diagnostic> Diagnostics { get; }
 	public object? Value { get; }
 }

@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "z4h+JWFUPlOS1mz4y4w2sFKG46l/v/GRaRzjA7TADkyutUJ2OklwkSyrFJCnIfcTFG/KQ3wr+0UkQQUV8CnDbw==",
+  "dgSpecHash": "vqFljA/kRlJHqFM5s4YEPooRRjsmHV80XmffdNmuh6cjNiKtEy/TNt5Am2zej7t3vnQM5vBg1dgyQF4ohcMBlA==",
   "success": true,
   "projectFilePath": "E:\\programming\\big_projects\\ilang_compiler\\ilc\\ilc.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\fecob\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
+    "C:\\Users\\fecob\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
