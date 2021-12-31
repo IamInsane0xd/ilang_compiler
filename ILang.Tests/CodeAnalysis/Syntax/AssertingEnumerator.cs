@@ -41,7 +41,7 @@ internal sealed class AssertingEnumerator : IDisposable
 			yield return n;
 
 			foreach (var child in n.GetChildren().Reverse())
-				stack.Push(child);
+				stack.Push(child ?? throw new ArgumentNullException(nameof(child)));
 		}
 	}
 

@@ -95,6 +95,6 @@ internal static class Program
 		var lastChild = node.GetChildren().LastOrDefault();
 
 		foreach (var child in node.GetChildren())
-			PrettyPrint(child, indent, child == lastChild, false);
+			PrettyPrint(child ?? throw new ArgumentNullException(nameof(child)), indent, child == lastChild, false);
 	}
 }
