@@ -7,13 +7,13 @@ internal static class Program
 {
 	private static void Main()
 	{
-		var showTree = false;
-		var variables = new Dictionary<VariableSymbol, object?>();
+		bool showTree = false;
+		Dictionary<VariableSymbol, object?>? variables = new Dictionary<VariableSymbol, object?>();
 
 		while (true)
 		{
 			Console.Write(">>> ");
-			var line = Console.ReadLine();
+			string? line = Console.ReadLine();
 
 			if (string.IsNullOrWhiteSpace(line))
 				continue;
@@ -33,10 +33,10 @@ internal static class Program
 					return;
 			}
 
-			var syntaxTree = SyntaxTree.Parse(line);
-			var compilation = new Compilation(syntaxTree);
-			var result = compilation.Evaluate(variables);
-			var diagnostics = result.Diagnostics;
+			SyntaxTree? syntaxTree = SyntaxTree.Parse(line);
+			Compilation? compilation = new Compilation(syntaxTree);
+			EvaluationResult? result = compilation.Evaluate(variables);
+			System.Collections.Immutable.ImmutableArray<Diagnostic> diagnostics = result.Diagnostics;
 
 			if (showTree)
 			{
@@ -52,15 +52,15 @@ internal static class Program
 
 			else
 			{
-				foreach (var diagnostic in diagnostics)
+				foreach (Diagnostic? diagnostic in diagnostics)
 				{
 					Console.ForegroundColor = ConsoleColor.DarkRed;
 					Console.WriteLine(diagnostic);
 					Console.ResetColor();
 
-					var prefix = line.Substring(0, diagnostic.Span.Start);
-					var error = diagnostic.Span.Start < line.Length ? line.Substring(diagnostic.Span.Start, diagnostic.Span.Length) : "";
-					var suffix = diagnostic.Span.End < line.Length ? line.Substring(diagnostic.Span.End) : "";
+					string? prefix = line[0..diagnostic.Span.Start];
+					string? error = diagnostic.Span.Start < line.Length ? line[diagnostic.Span.Start..diagnostic.Span.End] : "";
+					string? suffix = diagnostic.Span.End < line.Length ? line[^(diagnostic.Span.End - 1)..] : "";
 
 					Console.Write("   ");
 					Console.Write(prefix);

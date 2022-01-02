@@ -17,17 +17,17 @@ public sealed class SyntaxTree
 
 	public static SyntaxTree Parse(string text)
 	{
-		var parser = new Parser(text);
+		Parser? parser = new Parser(text);
 		return parser.Parse();
 	}
 
 	public static IEnumerable<SyntaxToken> ParseTokens(string text)
 	{
-		var lexer = new Lexer(text);
+		Lexer? lexer = new Lexer(text);
 
 		while (true)
 		{
-			var token = lexer.Lex();
+			SyntaxToken? token = lexer.Lex();
 
 			if (token.Kind == SyntaxKind.EndOfFileToken)
 				break;

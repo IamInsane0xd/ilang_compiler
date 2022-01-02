@@ -27,7 +27,7 @@ internal sealed class BoundBinaryOperator
 	public Type RightType { get; }
 	public Type Type { get; }
 
-	private static BoundBinaryOperator[] _operators = {
+	private static readonly BoundBinaryOperator[] _operators = {
 			new BoundBinaryOperator(SyntaxKind.AmpersandAmpersandToken, BoundBinaryOperatorKind.LogicalAnd, typeof(bool)),
 			new BoundBinaryOperator(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(bool)),
 			new BoundBinaryOperator(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(bool)),
@@ -44,9 +44,11 @@ internal sealed class BoundBinaryOperator
 
 	public static BoundBinaryOperator? Bind(SyntaxKind syntaxKind, Type leftType, Type rightType)
 	{
-		foreach (var op in _operators)
+		foreach (BoundBinaryOperator? op in _operators)
+		{
 			if (op.SyntaxKind == syntaxKind && op.LeftType == leftType && op.RightType == rightType)
 				return op;
+		}
 
 		return null;
 	}

@@ -11,10 +11,7 @@ internal sealed class AssertingEnumerator : IDisposable
 	private readonly IEnumerator<SyntaxNode> _enumerator;
 	private bool _hasErrors;
 
-	public AssertingEnumerator(SyntaxNode node)
-	{
-		_enumerator = Flatten(node).GetEnumerator();
-	}
+	public AssertingEnumerator(SyntaxNode node) => _enumerator = Flatten(node).GetEnumerator();
 
 	private bool MarkFailed()
 	{
@@ -32,15 +29,15 @@ internal sealed class AssertingEnumerator : IDisposable
 
 	private static IEnumerable<SyntaxNode> Flatten(SyntaxNode node)
 	{
-		var stack = new Stack<SyntaxNode>();
+		Stack<SyntaxNode>? stack = new Stack<SyntaxNode>();
 		stack.Push(node);
 
 		while (stack.Count > 0)
 		{
-			var n = stack.Pop();
+			SyntaxNode? n = stack.Pop();
 			yield return n;
 
-			foreach (var child in n.GetChildren().Reverse())
+			foreach (SyntaxNode? child in n.GetChildren().Reverse())
 				stack.Push(child ?? throw new ArgumentNullException(nameof(child)));
 		}
 	}
@@ -66,7 +63,7 @@ internal sealed class AssertingEnumerator : IDisposable
 			Assert.True(_enumerator.MoveNext());
 			Assert.Equal(kind, _enumerator.Current.Kind);
 
-			var token = Assert.IsType<SyntaxToken>(_enumerator.Current);
+			SyntaxToken? token = Assert.IsType<SyntaxToken>(_enumerator.Current);
 
 			Assert.Equal(text, token.Text);
 		}

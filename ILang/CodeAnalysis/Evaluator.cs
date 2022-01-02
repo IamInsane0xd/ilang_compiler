@@ -45,7 +45,7 @@ internal sealed class Evaluator
 
 	private object? EvaluateAssignmentExpression(BoundAssignmentExpression a)
 	{
-		var value = EvaluateExpression(a.Expression);
+		object? value = EvaluateExpression(a.Expression);
 		_variables[a.Variable] = value;
 		return value;
 	}
@@ -73,8 +73,8 @@ internal sealed class Evaluator
 
 	private object EvaluateBinaryExpression(BoundBinaryExpression b)
 	{
-		var left = EvaluateExpression(b.Left) ?? 0;
-		var right = EvaluateExpression(b.Right) ?? 0;
+		object? left = EvaluateExpression(b.Left) ?? 0;
+		object? right = EvaluateExpression(b.Right) ?? 0;
 
 		if (b.Op == null)
 			throw new ArgumentNullException(nameof(b.Op));

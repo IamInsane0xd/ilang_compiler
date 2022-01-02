@@ -11,10 +11,7 @@ internal sealed class Lexer
 	private SyntaxKind _kind;
 	private object? _value;
 
-	public Lexer(string text)
-	{
-		_text = text;
-	}
+	public Lexer(string text) => _text = text;
 
 	public DiagnosticBag Diagnostics => _diagnostics;
 
@@ -24,7 +21,7 @@ internal sealed class Lexer
 
 	private char Peek(int offset)
 	{
-		var index = _position + offset;
+		int index = _position + offset;
 
 		if (index >= _text.Length)
 			return '\0';
@@ -160,11 +157,11 @@ internal sealed class Lexer
 				break;
 		}
 
-		var length = _position - _start;
-		var text = SyntacFacts.GetText(_kind);
+		int length = _position - _start;
+		string? text = SyntacFacts.GetText(_kind);
 
 		if (text == null)
-			text = _text.Substring(_start, length);
+			text = _text[_start.._position];
 
 		return new SyntaxToken(_kind, _start, text, _value);
 	}
@@ -174,10 +171,10 @@ internal sealed class Lexer
 		while (char.IsDigit(Current))
 			_position++;
 
-		var length = _position - _start;
-		var text = _text.Substring(_start, length);
+		int length = _position - _start;
+		string? text = _text[_start.._position];
 
-		if (!int.TryParse(text, out var value))
+		if (!int.TryParse(text, out int value))
 			_diagnostics.ReportInvalidNumber(new TextSpan(_start, length), _text, typeof(int));
 
 		_value = value;
@@ -197,8 +194,8 @@ internal sealed class Lexer
 		while (char.IsLetter(Current))
 			_position++;
 
-		var length = _position - _start;
-		var text = _text.Substring(_start, length);
+		int length = _position - _start;
+		string? text = _text[_start.._position];
 
 		_kind = SyntacFacts.GetKeywordKind(text);
 	}

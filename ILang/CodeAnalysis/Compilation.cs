@@ -6,24 +6,21 @@ namespace ILang.CodeAnalysis;
 
 public sealed class Compilation
 {
-	public Compilation(SyntaxTree syntax)
-	{
-		Syntax = syntax;
-	}
+	public Compilation(SyntaxTree syntax) => Syntax = syntax;
 
 	public SyntaxTree Syntax { get; }
 
 	public EvaluationResult Evaluate(Dictionary<VariableSymbol, object?> variables)
 	{
-		var binder = new Binder(variables);
-		var boundExpression = binder.BindExpression(Syntax.Root);
-		var evaluator = new Evaluator(boundExpression, variables);
-		var diagnostics = Syntax.Diagnostics.Concat(binder.Diagnostics).ToImmutableArray();
+		Binder? binder = new Binder(variables);
+		BoundExpression? boundExpression = binder.BindExpression(Syntax.Root);
+		Evaluator? evaluator = new Evaluator(boundExpression, variables);
+		ImmutableArray<Diagnostic> diagnostics = Syntax.Diagnostics.Concat(binder.Diagnostics).ToImmutableArray();
 
 		if (diagnostics.Any())
 			return new EvaluationResult(diagnostics, null);
 
-		var value = evaluator.Evaluate();
+		object? value = evaluator.Evaluate();
 
 		return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
 	}

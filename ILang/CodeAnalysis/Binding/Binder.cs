@@ -7,10 +7,7 @@ internal sealed class Binder
 	private readonly Dictionary<VariableSymbol, object?> _variables;
 	private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
 
-	public Binder(Dictionary<VariableSymbol, object?> variables)
-	{
-		_variables = variables;
-	}
+	public Binder(Dictionary<VariableSymbol, object?> variables) => _variables = variables;
 
 	public DiagnosticBag Diagnostics => _diagnostics;
 
@@ -19,22 +16,22 @@ internal sealed class Binder
 		switch (syntax.Kind)
 		{
 			case SyntaxKind.ParenthesizedExpression:
-				return BindParenthesizedExpression((ParenthesizedExpressionSyntax)syntax);
+				return BindParenthesizedExpression((ParenthesizedExpressionSyntax) syntax);
 
 			case SyntaxKind.LiteralExpression:
-				return BindLiteralExpression((LiteralExpressionSyntax)syntax);
+				return BindLiteralExpression((LiteralExpressionSyntax) syntax);
 
 			case SyntaxKind.NameExpression:
-				return BindNameExpression((NameExpressionSyntax)syntax);
+				return BindNameExpression((NameExpressionSyntax) syntax);
 
 			case SyntaxKind.AssignmentExpression:
-				return BindAssignmentExpression((AssignmentExpressionSyntax)syntax);
+				return BindAssignmentExpression((AssignmentExpressionSyntax) syntax);
 
 			case SyntaxKind.UnaryExpression:
-				return BindUnaryExpression((UnaryExpressionSyntax)syntax);
+				return BindUnaryExpression((UnaryExpressionSyntax) syntax);
 
 			case SyntaxKind.BinaryExpression:
-				return BindBinaryExpression((BinaryExpressionSyntax)syntax);
+				return BindBinaryExpression((BinaryExpressionSyntax) syntax);
 		}
 
 		throw new Exception($"Unexpected syntax {syntax.Kind}");
@@ -44,18 +41,14 @@ internal sealed class Binder
 
 	private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
 	{
-		var value = syntax.Value ?? 0;
-
+		object? value = syntax.Value ?? 0;
 		return new BoundLiteralExpression(value);
 	}
 
 	private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
 	{
-		var name = syntax.IdentifierToken.Text;
-		var variable = _variables.Keys.FirstOrDefault(v => v.Name == name);
-
-		if (name == null)
-			throw new ArgumentNullException(nameof(name));
+		string? name = syntax.IdentifierToken.Text ?? throw new ArgumentNullException(nameof(name));
+		VariableSymbol? variable = _variables.Keys.FirstOrDefault(v => v.Name == name);
 
 		if (variable == null)
 		{
@@ -69,17 +62,17 @@ internal sealed class Binder
 	private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax syntax)
 	{
 		string? name = syntax.IdentifierToken.Text;
-		var boundExpression = BindExpression(syntax.Expression);
+		BoundExpression boundExpression = BindExpression(syntax.Expression);
 
 		if (name == null)
 			throw new ArgumentNullException(nameof(name));
 
-		var existingVariable = _variables.Keys.FirstOrDefault(v => v.Name == name);
+		VariableSymbol? existingVariable = _variables.Keys.FirstOrDefault(v => v.Name == name);
 
 		if (existingVariable != null)
 			_variables.Remove(existingVariable);
 
-		var variable = new VariableSymbol(name, boundExpression.Type);
+		VariableSymbol? variable = new VariableSymbol(name, boundExpression.Type);
 
 		_variables[variable] = null;
 
@@ -88,8 +81,8 @@ internal sealed class Binder
 
 	private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax)
 	{
-		var boundOperand = BindExpression(syntax.Operand);
-		var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
+		BoundExpression? boundOperand = BindExpression(syntax.Operand);
+		BoundUnaryOperator? boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
 
 		if (boundOperator == null)
 		{
@@ -102,9 +95,9 @@ internal sealed class Binder
 
 	private BoundExpression BindBinaryExpression(BinaryExpressionSyntax syntax)
 	{
-		var boundLeft = BindExpression(syntax.Left);
-		var boundRight = BindExpression(syntax.Right);
-		var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
+		BoundExpression? boundLeft = BindExpression(syntax.Left);
+		BoundExpression? boundRight = BindExpression(syntax.Right);
+		BoundBinaryOperator? boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
 
 		if (boundOperator == null)
 		{

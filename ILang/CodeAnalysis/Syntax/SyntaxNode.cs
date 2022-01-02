@@ -11,29 +11,29 @@ public abstract class SyntaxNode
 	{
 		get
 		{
-			var first = GetChildren().First().Span;
-			var last = GetChildren().Last().Span;
+			TextSpan first = GetChildren().First().Span;
+			TextSpan last = GetChildren().Last().Span;
 			return TextSpan.FormBounds(first.Start, last.End);
 		}
 	}
 
 	public IEnumerable<SyntaxNode> GetChildren()
 	{
-		var properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		PropertyInfo[]? properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-		foreach (var property in properties)
+		foreach (PropertyInfo? property in properties)
 		{
 			if (typeof(SyntaxNode).IsAssignableFrom(property.PropertyType))
 			{
-				var child = (SyntaxNode?) property.GetValue(this);
+				SyntaxNode? child = (SyntaxNode?) property.GetValue(this);
 				yield return child ?? throw new ArgumentNullException(nameof(child));
 			}
 
 			else if (typeof(IEnumerable<SyntaxNode>).IsAssignableFrom(property.PropertyType))
 			{
-				var children = (IEnumerable<SyntaxNode>?) property.GetValue(this);
+				IEnumerable<SyntaxNode>? children = (IEnumerable<SyntaxNode>?) property.GetValue(this);
 
-				foreach (var child in children ?? throw new ArgumentNullException(nameof(children)))
+				foreach (SyntaxNode? child in children ?? throw new ArgumentNullException(nameof(children)))
 					yield return child;
 			}
 		}
@@ -43,7 +43,7 @@ public abstract class SyntaxNode
 
 	private static void PrettyPrint(TextWriter writer, SyntaxNode node, string indent = "", bool isLast = true, bool isFirst = true)
 	{
-		var marker = isFirst ? "" : isLast ? "└──" : "├──";
+		string? marker = isFirst ? "" : isLast ? "└──" : "├──";
 		writer.Write(indent);
 		writer.Write(marker);
 		writer.Write(node.Kind);
@@ -57,15 +57,15 @@ public abstract class SyntaxNode
 
 		indent += isFirst ? "" : isLast ? "   " : "│  ";
 
-		var lastChild = node.GetChildren().LastOrDefault();
+		SyntaxNode? lastChild = node.GetChildren().LastOrDefault();
 
-		foreach (var child in node.GetChildren())
+		foreach (SyntaxNode? child in node.GetChildren())
 			PrettyPrint(writer, child ?? throw new ArgumentNullException(nameof(child)), indent, child == lastChild, false);
 	}
 
 	public override string ToString()
 	{
-		using(var writer = new StringWriter())
+		using (StringWriter? writer = new StringWriter())
 		{
 			WriteTo(writer);
 			return writer.ToString();

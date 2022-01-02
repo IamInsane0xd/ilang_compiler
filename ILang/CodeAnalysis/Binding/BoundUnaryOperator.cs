@@ -21,7 +21,7 @@ internal sealed class BoundUnaryOperator
 	public Type OperandType { get; }
 	public Type Type { get; }
 
-	private static BoundUnaryOperator[] _operators = {
+	private static readonly BoundUnaryOperator[] _operators = {
 			new BoundUnaryOperator(SyntaxKind.BangToken, BoundUnaryOperatorKind.LogicalNegation, typeof(bool)),
 
 			new BoundUnaryOperator(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, typeof(int)),
@@ -30,9 +30,11 @@ internal sealed class BoundUnaryOperator
 
 	public static BoundUnaryOperator? Bind(SyntaxKind syntaxKind, Type operandType)
 	{
-		foreach (var op in _operators)
+		foreach (BoundUnaryOperator? op in _operators)
+		{
 			if (op.SyntaxKind == syntaxKind && op.OperandType == operandType)
 				return op;
+		}
 
 		return null;
 	}

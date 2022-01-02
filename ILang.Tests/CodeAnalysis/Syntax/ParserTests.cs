@@ -10,16 +10,16 @@ public class ParserTests
 	[MemberData(nameof(GetBinaryOperatorPairsData))]
 	public void ParserBinaryExpressionHonorsPrecedences(SyntaxKind op1, SyntaxKind op2)
 	{
-		var op1Precedence = SyntacFacts.GetBinaryOperatorPrecedence(op1);
-		var op2Precedence = SyntacFacts.GetBinaryOperatorPrecedence(op2);
-		var op1Text = SyntacFacts.GetText(op1);
-		var op2Text = SyntacFacts.GetText(op2);
-		var text = $"a {op1Text} b {op2Text} c";
-		var expression = SyntaxTree.Parse(text).Root;
+		int op1Precedence = SyntacFacts.GetBinaryOperatorPrecedence(op1);
+		int op2Precedence = SyntacFacts.GetBinaryOperatorPrecedence(op2);
+		string? op1Text = SyntacFacts.GetText(op1);
+		string? op2Text = SyntacFacts.GetText(op2);
+		string? text = $"a {op1Text} b {op2Text} c";
+		ExpressionSyntax? expression = SyntaxTree.Parse(text).Root;
 
 		if (op1Precedence >= op2Precedence)
 		{
-			using (var e = new AssertingEnumerator(expression))
+			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
 			{
 				e.AssertNode(SyntaxKind.BinaryExpression);
 				e.AssertNode(SyntaxKind.BinaryExpression);
@@ -37,7 +37,7 @@ public class ParserTests
 
 		else
 		{
-			using (var e = new AssertingEnumerator(expression))
+			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
 			{
 				e.AssertNode(SyntaxKind.BinaryExpression);
 				e.AssertNode(SyntaxKind.NameExpression);
@@ -57,16 +57,16 @@ public class ParserTests
 	[MemberData(nameof(GetUnaryOperatorPairsData))]
 	public void ParserUnaryExpressionHonorsPrecedences(SyntaxKind unaryKind, SyntaxKind binaryKind)
 	{
-		var unaryPrecedence = SyntacFacts.GetUnaryOperatorPrecedence(unaryKind);
-		var binaryPrecedence = SyntacFacts.GetBinaryOperatorPrecedence(binaryKind);
-		var unaryText = SyntacFacts.GetText(unaryKind);
-		var binaryText = SyntacFacts.GetText(binaryKind);
-		var text = $"{unaryText} a {binaryText} b";
-		var expression = SyntaxTree.Parse(text).Root;
+		int unaryPrecedence = SyntacFacts.GetUnaryOperatorPrecedence(unaryKind);
+		int binaryPrecedence = SyntacFacts.GetBinaryOperatorPrecedence(binaryKind);
+		string? unaryText = SyntacFacts.GetText(unaryKind);
+		string? binaryText = SyntacFacts.GetText(binaryKind);
+		string? text = $"{unaryText} a {binaryText} b";
+		ExpressionSyntax? expression = SyntaxTree.Parse(text).Root;
 
 		if (unaryPrecedence >= binaryPrecedence)
 		{
-			using (var e = new AssertingEnumerator(expression))
+			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
 			{
 				e.AssertNode(SyntaxKind.BinaryExpression);
 				e.AssertNode(SyntaxKind.UnaryExpression);
@@ -81,7 +81,7 @@ public class ParserTests
 
 		else
 		{
-			using (var e = new AssertingEnumerator(expression))
+			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
 			{
 				e.AssertNode(SyntaxKind.UnaryExpression);
 				e.AssertToken(unaryKind, unaryText ?? "");
@@ -98,18 +98,18 @@ public class ParserTests
 
 	public static IEnumerable<object[]> GetBinaryOperatorPairsData()
 	{
-		foreach (var op1 in SyntacFacts.GetBinaryOperatorKinds())
+		foreach (SyntaxKind op1 in SyntacFacts.GetBinaryOperatorKinds())
 		{
-			foreach (var op2 in SyntacFacts.GetBinaryOperatorKinds())
+			foreach (SyntaxKind op2 in SyntacFacts.GetBinaryOperatorKinds())
 				yield return new object[] { op1, op2 };
 		}
 	}
 
 	public static IEnumerable<object[]> GetUnaryOperatorPairsData()
 	{
-		foreach (var unary in SyntacFacts.GetUnaryOperatorKinds())
+		foreach (SyntaxKind unary in SyntacFacts.GetUnaryOperatorKinds())
 		{
-			foreach (var binary in SyntacFacts.GetBinaryOperatorKinds())
+			foreach (SyntaxKind binary in SyntacFacts.GetBinaryOperatorKinds())
 				yield return new object[] { unary, binary };
 		}
 	}

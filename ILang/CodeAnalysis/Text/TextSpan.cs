@@ -14,7 +14,7 @@ public struct TextSpan
 
 	internal static TextSpan FormBounds(int start, int end)
 	{
-		var length = end - start;
+		int length = end - start;
 		return new TextSpan(start, length);
 	}
 }
