@@ -19,9 +19,9 @@ public abstract class SyntaxNode
 
 	public IEnumerable<SyntaxNode> GetChildren()
 	{
-		PropertyInfo[]? properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		PropertyInfo[] properties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-		foreach (PropertyInfo? property in properties)
+		foreach (PropertyInfo property in properties)
 		{
 			if (typeof(SyntaxNode).IsAssignableFrom(property.PropertyType))
 			{
@@ -33,7 +33,7 @@ public abstract class SyntaxNode
 			{
 				IEnumerable<SyntaxNode>? children = (IEnumerable<SyntaxNode>?) property.GetValue(this);
 
-				foreach (SyntaxNode? child in children ?? throw new ArgumentNullException(nameof(children)))
+				foreach (SyntaxNode child in children ?? throw new ArgumentNullException(nameof(children)))
 					yield return child;
 			}
 		}
@@ -43,7 +43,7 @@ public abstract class SyntaxNode
 
 	private static void PrettyPrint(TextWriter writer, SyntaxNode node, string indent = "", bool isLast = true, bool isFirst = true)
 	{
-		string? marker = isFirst ? "" : isLast ? "└──" : "├──";
+		string marker = isFirst ? "" : isLast ? "└──" : "├──";
 		writer.Write(indent);
 		writer.Write(marker);
 		writer.Write(node.Kind);
@@ -59,13 +59,13 @@ public abstract class SyntaxNode
 
 		SyntaxNode? lastChild = node.GetChildren().LastOrDefault();
 
-		foreach (SyntaxNode? child in node.GetChildren())
+		foreach (SyntaxNode child in node.GetChildren())
 			PrettyPrint(writer, child ?? throw new ArgumentNullException(nameof(child)), indent, child == lastChild, false);
 	}
 
 	public override string ToString()
 	{
-		using (StringWriter? writer = new StringWriter())
+		using (StringWriter writer = new StringWriter())
 		{
 			WriteTo(writer);
 			return writer.ToString();

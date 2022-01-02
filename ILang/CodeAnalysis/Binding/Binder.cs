@@ -41,13 +41,20 @@ internal sealed class Binder
 
 	private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
 	{
-		object? value = syntax.Value ?? 0;
+		object value = syntax.Value ?? 0;
 		return new BoundLiteralExpression(value);
 	}
 
 	private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
 	{
-		string? name = syntax.IdentifierToken.Text ?? throw new ArgumentNullException(nameof(name));
+		string? name = syntax.IdentifierToken.Text;
+
+		if (name == null)
+		{
+			_diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, "");
+			return new BoundLiteralExpression(0);
+		}
+
 		VariableSymbol? variable = _variables.Keys.FirstOrDefault(v => v.Name == name);
 
 		if (variable == null)
@@ -72,7 +79,7 @@ internal sealed class Binder
 		if (existingVariable != null)
 			_variables.Remove(existingVariable);
 
-		VariableSymbol? variable = new VariableSymbol(name, boundExpression.Type);
+		VariableSymbol variable = new VariableSymbol(name, boundExpression.Type);
 
 		_variables[variable] = null;
 
@@ -81,7 +88,7 @@ internal sealed class Binder
 
 	private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax)
 	{
-		BoundExpression? boundOperand = BindExpression(syntax.Operand);
+		BoundExpression boundOperand = BindExpression(syntax.Operand);
 		BoundUnaryOperator? boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
 
 		if (boundOperator == null)
@@ -95,8 +102,8 @@ internal sealed class Binder
 
 	private BoundExpression BindBinaryExpression(BinaryExpressionSyntax syntax)
 	{
-		BoundExpression? boundLeft = BindExpression(syntax.Left);
-		BoundExpression? boundRight = BindExpression(syntax.Right);
+		BoundExpression boundLeft = BindExpression(syntax.Left);
+		BoundExpression boundRight = BindExpression(syntax.Right);
 		BoundBinaryOperator? boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
 
 		if (boundOperator == null)

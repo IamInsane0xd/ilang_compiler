@@ -22,38 +22,38 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic>
 
 	public void ReportInvalidNumber(TextSpan span, string text, Type type)
 	{
-		string? message = $"Error: The number {text} is not a valid {type}";
+		string message = $"Error: The number {text} is not a valid {type}";
 		Report(span, message);
 	}
 
 	public void ReportBadCharacter(int position, char current)
 	{
 		TextSpan span = new TextSpan(position, 1);
-		string? message = $"Error: bad character in input '{current}'";
+		string message = $"Error: bad character in input '{current}'";
 		Report(span, message);
 	}
 
 	public void ReportUnexpectedToken(TextSpan span, SyntaxKind actualKind, SyntaxKind expectedKind)
 	{
-		string? message = $"Error: Unexpected token <{actualKind}>, expected <{expectedKind}>";
+		string message = $"Error: Unexpected token <{actualKind}>, expected <{expectedKind}>";
 		Report(span, message);
 	}
 
 	public void ReportUndefinedUnaryOperator(TextSpan span, string? operatorText, Type operandType)
 	{
-		string? message = $"Error: Unary operator '{operatorText}' is not defined for type {operandType}";
+		string message = $"Error: Unary operator '{operatorText}' is not defined for type {operandType}";
 		Report(span, message);
 	}
 
 	public void ReportUndefinedBinaryOperator(TextSpan span, string? operatorText, Type leftType, Type rightType)
 	{
-		string? message = $"Error: Binary operator '{operatorText}' is not defined for types {leftType} and {rightType}";
+		string message = $"Error: Binary operator '{operatorText}' is not defined for types {leftType} and {rightType}";
 		Report(span, message);
 	}
 
 	public void ReportUndefinedName(TextSpan span, string name)
 	{
-		string? message = $"Variable '{name}' is not defined";
+		string message = $"Variable '{name}' is not defined";
 		Report(span, message);
 	}
 }

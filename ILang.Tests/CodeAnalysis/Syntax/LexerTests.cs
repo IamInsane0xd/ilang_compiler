@@ -11,11 +11,11 @@ public class LexerTests
 	[Fact]
 	public void LexerTestsAllTokens()
 	{
-		IEnumerable<SyntaxKind>? tokenKinds = Enum.GetValues(typeof(SyntaxKind))
-												 .Cast<SyntaxKind>()
-												 .Where(k => k.ToString().EndsWith("Keyword") || k.ToString().EndsWith("Token"));
-		IEnumerable<SyntaxKind>? testedTokenKinds = GetTokens().Concat(GetSeparators()).Select(t => t.kind);
-		SortedSet<SyntaxKind>? untestedTokenKinds = new SortedSet<SyntaxKind>(tokenKinds);
+		IEnumerable<SyntaxKind> tokenKinds = Enum.GetValues(typeof(SyntaxKind))
+																						 .Cast<SyntaxKind>()
+																						 .Where(k => k.ToString().EndsWith("Keyword") || k.ToString().EndsWith("Token"));
+		IEnumerable<SyntaxKind> testedTokenKinds = GetTokens().Concat(GetSeparators()).Select(t => t.kind);
+		SortedSet<SyntaxKind> untestedTokenKinds = new SortedSet<SyntaxKind>(tokenKinds);
 
 		untestedTokenKinds.Remove(SyntaxKind.BadToken);
 		untestedTokenKinds.Remove(SyntaxKind.EndOfFileToken);
@@ -28,8 +28,8 @@ public class LexerTests
 	[MemberData(nameof(GetTokensData))]
 	public void LexerLexesToken(SyntaxKind kind, string text)
 	{
-		IEnumerable<SyntaxToken>? tokens = SyntaxTree.ParseTokens(text);
-		SyntaxToken? token = Assert.Single(tokens);
+		IEnumerable<SyntaxToken> tokens = SyntaxTree.ParseTokens(text);
+		SyntaxToken token = Assert.Single(tokens);
 
 		Assert.Equal(kind, token.Kind);
 		Assert.Equal(text, token.Text);
@@ -39,8 +39,8 @@ public class LexerTests
 	[MemberData(nameof(GetTokenPairsData))]
 	public void LexerLexesTokenPairs(SyntaxKind t1Kind, string t1Text, SyntaxKind t2Kind, string t2Text)
 	{
-		string? text = t1Text + t2Text;
-		SyntaxToken[]? tokens = SyntaxTree.ParseTokens(text).ToArray();
+		string text = t1Text + t2Text;
+		SyntaxToken[] tokens = SyntaxTree.ParseTokens(text).ToArray();
 
 		Assert.Equal(2, tokens.Length);
 		Assert.Equal(tokens[0].Kind, t1Kind);
@@ -53,8 +53,8 @@ public class LexerTests
 	[MemberData(nameof(GetTokenPairsWithSeparatorData))]
 	public void LexerLexesTokenPairsWithSeparator(SyntaxKind t1Kind, string t1Text, SyntaxKind separatorKind, string separatorText, SyntaxKind t2Kind, string t2Text)
 	{
-		string? text = t1Text + separatorText + t2Text;
-		SyntaxToken[]? tokens = SyntaxTree.ParseTokens(text).ToArray();
+		string text = t1Text + separatorText + t2Text;
+		SyntaxToken[] tokens = SyntaxTree.ParseTokens(text).ToArray();
 
 		Assert.Equal(3, tokens.Length);
 		Assert.Equal(tokens[0].Kind, t1Kind);
@@ -90,7 +90,7 @@ public class LexerTests
 																																																			.Select(k => (kind: k, text: SyntacFacts.GetText(k)))
 																																																			.Where(t => t.text != null);
 
-		(SyntaxKind, string)[]? dynamicTokens = new[]
+		(SyntaxKind, string)[] dynamicTokens = new[]
 		{
 			(SyntaxKind.NumberToken, "1"),
 			(SyntaxKind.NumberToken, "123"),

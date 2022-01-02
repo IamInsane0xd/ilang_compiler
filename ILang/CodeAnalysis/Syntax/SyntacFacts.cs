@@ -59,7 +59,7 @@ public static class SyntacFacts
 
 	public static IEnumerable<SyntaxKind> GetUnaryOperatorKinds()
 	{
-		SyntaxKind[]? kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
+		SyntaxKind[] kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
 
 		foreach (SyntaxKind kind in kinds)
 		{
@@ -70,7 +70,7 @@ public static class SyntacFacts
 
 	public static IEnumerable<SyntaxKind> GetBinaryOperatorKinds()
 	{
-		SyntaxKind[]? kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
+		SyntaxKind[] kinds = (SyntaxKind[]) Enum.GetValues(typeof(SyntaxKind));
 
 		foreach (SyntaxKind kind in kinds)
 		{

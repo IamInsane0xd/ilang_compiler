@@ -41,7 +41,13 @@ internal sealed class Evaluator
 
 	private static object EvaluateLiteralExpression(BoundLiteralExpression l) => l.Value;
 
-	private object? EvaluateVariableExpression(BoundVariableExpression v) => _variables[v.Variable];
+	private object? EvaluateVariableExpression(BoundVariableExpression v)
+	{
+		if (_variables.ContainsValue(v.Variable))
+			return _variables[v.Variable];
+
+		return 0;
+	}
 
 	private object? EvaluateAssignmentExpression(BoundAssignmentExpression a)
 	{
@@ -73,8 +79,8 @@ internal sealed class Evaluator
 
 	private object EvaluateBinaryExpression(BoundBinaryExpression b)
 	{
-		object? left = EvaluateExpression(b.Left) ?? 0;
-		object? right = EvaluateExpression(b.Right) ?? 0;
+		object left = EvaluateExpression(b.Left) ?? 0;
+		object right = EvaluateExpression(b.Right) ?? 0;
 
 		if (b.Op == null)
 			throw new ArgumentNullException(nameof(b.Op));

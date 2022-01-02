@@ -12,9 +12,9 @@ public sealed class Compilation
 
 	public EvaluationResult Evaluate(Dictionary<VariableSymbol, object?> variables)
 	{
-		Binder? binder = new Binder(variables);
-		BoundExpression? boundExpression = binder.BindExpression(Syntax.Root);
-		Evaluator? evaluator = new Evaluator(boundExpression, variables);
+		Binder binder = new Binder(variables);
+		BoundExpression boundExpression = binder.BindExpression(Syntax.Root);
+		Evaluator evaluator = new Evaluator(boundExpression, variables);
 		ImmutableArray<Diagnostic> diagnostics = Syntax.Diagnostics.Concat(binder.Diagnostics).ToImmutableArray();
 
 		if (diagnostics.Any())

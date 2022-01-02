@@ -4,14 +4,14 @@ namespace ILang.CodeAnalysis.Syntax;
 
 internal sealed class Lexer
 {
-	private readonly string _text;
+	private readonly SourceText _text;
 	private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
 	private int _position;
 	private int _start;
 	private SyntaxKind _kind;
 	private object? _value;
 
-	public Lexer(string text) => _text = text;
+	public Lexer(SourceText text) => _text = text;
 
 	public DiagnosticBag Diagnostics => _diagnostics;
 
@@ -158,10 +158,7 @@ internal sealed class Lexer
 		}
 
 		int length = _position - _start;
-		string? text = SyntacFacts.GetText(_kind);
-
-		if (text == null)
-			text = _text[_start.._position];
+		string text = SyntacFacts.GetText(_kind) ?? _text.ToString(_start, length);
 
 		return new SyntaxToken(_kind, _start, text, _value);
 	}
@@ -172,10 +169,10 @@ internal sealed class Lexer
 			_position++;
 
 		int length = _position - _start;
-		string? text = _text[_start.._position];
+		string? text = _text.ToString(_start, length);
 
 		if (!int.TryParse(text, out int value))
-			_diagnostics.ReportInvalidNumber(new TextSpan(_start, length), _text, typeof(int));
+			_diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, typeof(int));
 
 		_value = value;
 		_kind = SyntaxKind.NumberToken;
@@ -195,7 +192,7 @@ internal sealed class Lexer
 			_position++;
 
 		int length = _position - _start;
-		string? text = _text[_start.._position];
+		string? text = _text.ToString(_start, length);
 
 		_kind = SyntacFacts.GetKeywordKind(text);
 	}

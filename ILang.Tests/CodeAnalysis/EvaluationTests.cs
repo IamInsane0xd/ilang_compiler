@@ -31,9 +31,9 @@ public class EvaluationTests
 	[InlineData("!false", true)]
 	public void SyntaxFactGetTextRoundTrips(string text, object expectedValue)
 	{
-		SyntaxTree? syntaxTree = SyntaxTree.Parse(text);
-		Compilation? compilation = new Compilation(syntaxTree);
-		Dictionary<VariableSymbol, object?>? variables = new Dictionary<VariableSymbol, object?>();
+		SyntaxTree syntaxTree = SyntaxTree.Parse(text);
+		Compilation compilation = new Compilation(syntaxTree);
+		Dictionary<VariableSymbol, object?> variables = new Dictionary<VariableSymbol, object?>();
 		EvaluationResult? result = compilation.Evaluate(variables);
 
 		Assert.Empty(result.Diagnostics);

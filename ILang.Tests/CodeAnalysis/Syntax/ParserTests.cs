@@ -14,7 +14,7 @@ public class ParserTests
 		int op2Precedence = SyntacFacts.GetBinaryOperatorPrecedence(op2);
 		string? op1Text = SyntacFacts.GetText(op1);
 		string? op2Text = SyntacFacts.GetText(op2);
-		string? text = $"a {op1Text} b {op2Text} c";
+		string text = $"a {op1Text} b {op2Text} c";
 		ExpressionSyntax? expression = SyntaxTree.Parse(text).Root;
 
 		if (op1Precedence >= op2Precedence)
@@ -61,7 +61,7 @@ public class ParserTests
 		int binaryPrecedence = SyntacFacts.GetBinaryOperatorPrecedence(binaryKind);
 		string? unaryText = SyntacFacts.GetText(unaryKind);
 		string? binaryText = SyntacFacts.GetText(binaryKind);
-		string? text = $"{unaryText} a {binaryText} b";
+		string text = $"{unaryText} a {binaryText} b";
 		ExpressionSyntax? expression = SyntaxTree.Parse(text).Root;
 
 		if (unaryPrecedence >= binaryPrecedence)
