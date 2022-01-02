@@ -1,4 +1,4 @@
-namespace ILang.CodeAnalysis;
+namespace ILang.CodeAnalysis.Text;
 
 public struct TextSpan
 {

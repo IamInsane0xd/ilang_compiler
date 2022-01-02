@@ -1,3 +1,5 @@
+using ILang.CodeAnalysis.Text;
+
 namespace ILang.CodeAnalysis.Syntax;
 
 public sealed class SyntaxToken : SyntaxNode

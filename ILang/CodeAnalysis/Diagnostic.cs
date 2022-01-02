@@ -1,3 +1,5 @@
+using ILang.CodeAnalysis.Text;
+
 namespace ILang.CodeAnalysis;
 
 public sealed class Diagnostic

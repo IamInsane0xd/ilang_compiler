@@ -1,4 +1,5 @@
 using ILang.CodeAnalysis.Syntax;
+using ILang.CodeAnalysis.Text;
 using System.Collections;
 
 namespace ILang.CodeAnalysis;
