@@ -12,7 +12,7 @@ public struct TextSpan
 	public int Length { get; }
 	public int End => Start + Length;
 
-	internal static TextSpan FormBounds(int start, int end)
+	public static TextSpan FormBounds(int start, int end)
 	{
 		int length = end - start;
 		return new TextSpan(start, length);
