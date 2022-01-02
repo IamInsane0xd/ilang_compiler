@@ -1,3 +1,5 @@
+using ILang.CodeAnalysis.Text;
+
 namespace ILang.CodeAnalysis.Syntax;
 
 internal sealed class Lexer
