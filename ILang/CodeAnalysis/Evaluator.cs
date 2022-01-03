@@ -43,7 +43,7 @@ internal sealed class Evaluator
 
 	private object? EvaluateVariableExpression(BoundVariableExpression v)
 	{
-		if (_variables.ContainsValue(v.Variable))
+		if (_variables.ContainsKey(v.Variable))
 			return _variables[v.Variable];
 
 		return 0;

@@ -169,7 +169,7 @@ internal sealed class Lexer
 			_position++;
 
 		int length = _position - _start;
-		string? text = _text.ToString(_start, length);
+		string text = _text.ToString(_start, length);
 
 		if (!int.TryParse(text, out int value))
 			_diagnostics.ReportInvalidNumber(new TextSpan(_start, length), text, typeof(int));
@@ -192,7 +192,7 @@ internal sealed class Lexer
 			_position++;
 
 		int length = _position - _start;
-		string? text = _text.ToString(_start, length);
+		string text = _text.ToString(_start, length);
 
 		_kind = SyntacFacts.GetKeywordKind(text);
 	}
