@@ -63,7 +63,7 @@ public sealed class SourceText
 			}
 		}
 
-		if (position > lineStart)
+		if (position >= lineStart)
 			AddLine(result, sourceText, position, lineStart, 0);
 
 		return result.ToImmutable();

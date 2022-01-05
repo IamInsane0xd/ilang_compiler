@@ -25,13 +25,10 @@ internal static class Program
 			string? input = Console.ReadLine();
 			bool isBlank = string.IsNullOrWhiteSpace(input);
 
-			if (string.IsNullOrWhiteSpace(input))
-				continue;
-
 			if (textBuilder.Length == 0)
 			{
 				if (isBlank)
-					break;
+					continue;
 
 				switch (input)
 				{
