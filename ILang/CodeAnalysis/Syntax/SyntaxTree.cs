@@ -5,18 +5,20 @@ namespace ILang.CodeAnalysis.Syntax;
 
 public sealed class SyntaxTree
 {
-	public SyntaxTree(SourceText text, ImmutableArray<Diagnostic> diagnostics, ExpressionSyntax root, SyntaxToken endOfFileToken)
+	private SyntaxTree(SourceText text)
 	{
+		Parser parser = new Parser(text);
+		CompilationUnitSyntax root = parser.ParseCompilationUnit();
+		ImmutableArray<Diagnostic> diagnostics = parser.Diagnostics.ToImmutableArray();
+
 		Text = text;
-		Diagnostics = diagnostics;
 		Root = root;
-		EndOfFileToken = endOfFileToken;
+		Diagnostics = diagnostics;
 	}
 
 	public SourceText Text { get; }
+	public CompilationUnitSyntax Root { get; }
 	public ImmutableArray<Diagnostic> Diagnostics { get; }
-	public ExpressionSyntax Root { get; }
-	public SyntaxToken EndOfFileToken { get; }
 
 	public static SyntaxTree Parse(string text)
 	{
@@ -24,11 +26,7 @@ public sealed class SyntaxTree
 		return Parse(sourceText);
 	}
 
-	public static SyntaxTree Parse(SourceText text)
-	{
-		Parser parser = new Parser(text);
-		return parser.Parse();
-	}
+	public static SyntaxTree Parse(SourceText text) => new SyntaxTree(text);
 
 	public static IEnumerable<SyntaxToken> ParseTokens(string text)
 	{
