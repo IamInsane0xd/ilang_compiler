@@ -15,7 +15,7 @@ public class ParserTests
 		string? op1Text = SyntacFacts.GetText(op1);
 		string? op2Text = SyntacFacts.GetText(op2);
 		string text = $"a {op1Text} b {op2Text} c";
-		ExpressionSyntax? expression = SyntaxTree.Parse(text).Root;
+		ExpressionSyntax expression = ParseExpression(text);
 
 		if (op1Precedence >= op2Precedence)
 		{
@@ -62,7 +62,7 @@ public class ParserTests
 		string? unaryText = SyntacFacts.GetText(unaryKind);
 		string? binaryText = SyntacFacts.GetText(binaryKind);
 		string text = $"{unaryText} a {binaryText} b";
-		ExpressionSyntax? expression = SyntaxTree.Parse(text).Root;
+		ExpressionSyntax expression = ParseExpression(text);
 
 		if (unaryPrecedence >= binaryPrecedence)
 		{
@@ -94,6 +94,13 @@ public class ParserTests
 				e.AssertNode(SyntaxKind.NameExpression);
 			}
 		}
+	}
+
+	private static ExpressionSyntax ParseExpression(string text)
+	{
+		SyntaxTree syntaxTree = SyntaxTree.Parse(text);
+		CompilationUnitSyntax root = syntaxTree.Root;
+		return root.Expression;
 	}
 
 	public static IEnumerable<object[]> GetBinaryOperatorPairsData()
