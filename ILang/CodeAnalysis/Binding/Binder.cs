@@ -1,13 +1,57 @@
 using ILang.CodeAnalysis.Syntax;
+using System.Collections.Immutable;
 
 namespace ILang.CodeAnalysis.Binding;
 
 internal sealed class Binder
 {
-	private readonly Dictionary<VariableSymbol, object?> _variables;
 	private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
+	private BoundScope _scope;
 
-	public Binder(Dictionary<VariableSymbol, object?> variables) => _variables = variables;
+	public Binder(BoundScope? parent)
+	{
+		_scope = new BoundScope(parent);
+	}
+
+	public static BoundGlobalScope BindGlobalScope(BoundGlobalScope? previous, CompilationUnitSyntax syntax)
+	{
+		BoundScope? parentScope = CreateParentScopes(previous);
+		Binder binder = new Binder(parentScope);
+		BoundExpression expression = binder.BindExpression(syntax.Expression);
+		ImmutableArray<VariableSymbol> variables = binder._scope.GetDeclaredVariables();
+		ImmutableArray<Diagnostic> diagnostics = binder.Diagnostics.ToImmutableArray();
+
+		if (previous != null)
+			diagnostics = diagnostics.InsertRange(0, previous.Diagnostics);
+
+		return new BoundGlobalScope(previous, diagnostics, variables, expression);
+	}
+
+	private static BoundScope? CreateParentScopes(BoundGlobalScope? previous)
+	{
+		Stack<BoundGlobalScope> stack = new Stack<BoundGlobalScope>();
+
+		while (previous != null)
+		{
+			stack.Push(previous);
+			previous = previous.Previous;
+		}
+
+		BoundScope? parent = null;
+
+		while (stack.Count > 0)
+		{
+			previous = stack.Pop();
+			BoundScope scope = new BoundScope(parent);
+			
+			foreach (var v in previous.Variables)
+				scope.TryDeclare(v);
+
+			parent = scope;
+		}
+
+		return parent;
+	}
 
 	public DiagnosticBag Diagnostics => _diagnostics;
 
@@ -55,13 +99,14 @@ internal sealed class Binder
 			return new BoundLiteralExpression(0);
 		}
 
-		VariableSymbol? variable = _variables.Keys.FirstOrDefault(v => v.Name == name);
-
-		if (variable == null)
+		if (!_scope.TryLookup(name, out VariableSymbol? variable))
 		{
 			_diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
 			return new BoundLiteralExpression(0);
 		}
+
+		if (variable == null)
+			throw new ArgumentNullException(nameof(variable));
 
 		return new BoundVariableExpression(variable);
 	}
@@ -74,14 +119,20 @@ internal sealed class Binder
 		if (name == null)
 			throw new ArgumentNullException(nameof(name));
 
-		VariableSymbol? existingVariable = _variables.Keys.FirstOrDefault(v => v.Name == name);
+		if (!_scope.TryLookup(name, out VariableSymbol? variable))
+		{
+			variable = new VariableSymbol(name, boundExpression.Type);
+			_scope.TryDeclare(variable);
+		}
 
-		if (existingVariable != null)
-			_variables.Remove(existingVariable);
+		if (variable == null)
+			throw new ArgumentNullException(nameof(variable));
 
-		VariableSymbol variable = new VariableSymbol(name, boundExpression.Type);
-
-		_variables[variable] = null;
+		if (boundExpression.Type != variable.Type)
+		{
+			_diagnostics.ReportCannotConvert(syntax.Expression.Span, boundExpression.Type, variable.Type);
+			return boundExpression;
+		}
 
 		return new BoundAssignmentExpression(variable, boundExpression);
 	}

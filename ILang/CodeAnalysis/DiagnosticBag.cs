@@ -53,7 +53,13 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic>
 
 	public void ReportUndefinedName(TextSpan span, string name)
 	{
-		string message = $"Variable '{name}' is not defined";
+		string message = $"Error: Variable '{name}' is not defined";
+		Report(span, message);
+	}
+
+	internal void ReportCannotConvert(TextSpan span, Type fromType, Type toType)
+	{
+		string message = $"Error: Cannot convert type {fromType} to {toType}";
 		Report(span, message);
 	}
 }

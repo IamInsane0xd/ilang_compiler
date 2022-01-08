@@ -13,6 +13,7 @@ internal static class Program
 		bool showTree = false;
 		Dictionary<VariableSymbol, object?> variables = new Dictionary<VariableSymbol, object?>();
 		StringBuilder textBuilder = new StringBuilder();
+		Compilation? previous = null;
 
 		while (true)
 		{
@@ -49,6 +50,11 @@ internal static class Program
 						Console.Clear();
 						continue;
 
+					case "#reset":
+						previous = null;
+						Console.WriteLine();
+						continue;
+
 					case "#exit":
 						Console.ResetColor();
 						return;
@@ -63,7 +69,7 @@ internal static class Program
 			if (!isBlank && syntaxTree.Diagnostics.Any())
 				continue;
 
-			Compilation compilation = new Compilation(syntaxTree);
+			Compilation compilation = previous == null ? new Compilation(syntaxTree) : previous.ContinueWith(syntaxTree);
 			EvaluationResult result = compilation.Evaluate(variables);
 			ImmutableArray<Diagnostic> diagnostics = result.Diagnostics;
 
@@ -80,6 +86,8 @@ internal static class Program
 				Console.WriteLine(result.Value);
 				Console.WriteLine();
 				Console.ResetColor();
+
+				previous = compilation;
 			}
 
 			else
