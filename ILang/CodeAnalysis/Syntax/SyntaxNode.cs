@@ -49,10 +49,9 @@ public abstract class SyntaxNode
 		writer.Write(indent);
 
 		if (isToConsole)
-		{
 			Console.ForegroundColor = ConsoleColor.DarkGray;
-			writer.Write(marker);
-		}
+
+		writer.Write(marker);
 
 		if (isToConsole)
 			Console.ForegroundColor = node is SyntaxToken ? ConsoleColor.Blue : ConsoleColor.Cyan;
