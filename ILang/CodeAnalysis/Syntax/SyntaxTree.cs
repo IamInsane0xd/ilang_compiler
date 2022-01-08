@@ -5,14 +5,15 @@ namespace ILang.CodeAnalysis.Syntax;
 
 public sealed class SyntaxTree
 {
-	private SyntaxTree(SourceText text)
+	public SyntaxTree(SourceText text)
 	{
 		Parser parser = new Parser(text);
 		CompilationUnitSyntax root = parser.ParseCompilationUnit();
+		ImmutableArray<Diagnostic> diagnostics = parser.Diagnostics.ToImmutableArray();
 
 		Text = text;
 		Root = root;
-		Diagnostics = parser.Diagnostics.ToImmutableArray();
+		Diagnostics = diagnostics;
 	}
 
 	public SourceText Text { get; }
