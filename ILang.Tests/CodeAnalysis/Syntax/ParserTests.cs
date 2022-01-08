@@ -31,7 +31,6 @@ public class ParserTests
 				e.AssertToken(op2, op2Text ?? "");
 				e.AssertNode(SyntaxKind.NameExpression);
 				e.AssertToken(SyntaxKind.IdentifierToken, "c");
-
 			}
 		}
 
@@ -100,7 +99,8 @@ public class ParserTests
 	{
 		SyntaxTree syntaxTree = SyntaxTree.Parse(text);
 		CompilationUnitSyntax root = syntaxTree.Root;
-		return root.Expression;
+		StatementSyntax statement = root.Statement;
+		return Assert.IsType<ExpressionStatementSyntax>(statement).Expression;
 	}
 
 	public static IEnumerable<object[]> GetBinaryOperatorPairsData()

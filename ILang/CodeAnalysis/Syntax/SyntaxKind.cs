@@ -19,6 +19,8 @@ public enum SyntaxKind
 	BangEqualsToken,
 	OpenParenthesisToken,
 	CloseParenthesisToken,
+	OpenBraceToken,
+	CloseBraceToken,
 	IdentifierToken,
 
 	// Keywords
@@ -27,6 +29,10 @@ public enum SyntaxKind
 
 	// Nodes
 	CompilationUnit,
+
+	//Statements
+	BlockStatement,
+	ExpressionStatement,
 
 	// Expressions
 	LiteralExpression,

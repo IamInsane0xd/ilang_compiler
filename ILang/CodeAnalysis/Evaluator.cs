@@ -4,16 +4,46 @@ namespace ILang.CodeAnalysis;
 
 internal sealed class Evaluator
 {
-	private readonly BoundExpression _root;
+	private readonly BoundStatement _root;
 	private readonly Dictionary<VariableSymbol, object?> _variables;
+	private object? _lastValue;
 
-	public Evaluator(BoundExpression root, Dictionary<VariableSymbol, object?> variables)
+	public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object?> variables)
 	{
 		_root = root;
 		_variables = variables;
 	}
 
-	public object? Evaluate() => EvaluateExpression(_root);
+	public object? Evaluate()
+	{
+		EvaluateStatement(_root);
+		return _lastValue;
+	}
+
+	private void EvaluateStatement(BoundStatement node)
+	{
+		switch (node.Kind)
+		{
+			case BoundNodeKind.BlockStatement:
+				EvaluateBlockStatement((BoundBlockStatement) node);
+				break;
+
+			case BoundNodeKind.ExpressionStatement:
+				EvaluateExpressionStatement((BoundExpressionStatement) node);
+				break;
+
+			default:
+				throw new Exception($"Unexpected node {node.Kind}");
+		}
+	}
+
+	private void EvaluateBlockStatement(BoundBlockStatement node)
+	{
+		foreach (var statement in node.Statements)
+			EvaluateStatement(statement);
+	}
+
+	private void EvaluateExpressionStatement(BoundExpressionStatement node) => _lastValue = EvaluateExpression(node.Expression);
 
 	private object? EvaluateExpression(BoundExpression node)
 	{

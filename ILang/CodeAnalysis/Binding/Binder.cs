@@ -17,14 +17,14 @@ internal sealed class Binder
 	{
 		BoundScope? parentScope = CreateParentScopes(previous);
 		Binder binder = new Binder(parentScope);
-		BoundExpression expression = binder.BindExpression(syntax.Expression);
+		BoundStatement statement = binder.BindStatement(syntax.Statement);
 		ImmutableArray<VariableSymbol> variables = binder._scope.GetDeclaredVariables();
 		ImmutableArray<Diagnostic> diagnostics = binder.Diagnostics.ToImmutableArray();
 
 		if (previous != null)
 			diagnostics = diagnostics.InsertRange(0, previous.Diagnostics);
 
-		return new BoundGlobalScope(previous, diagnostics, variables, expression);
+		return new BoundGlobalScope(previous, diagnostics, variables, statement);
 	}
 
 	private static BoundScope? CreateParentScopes(BoundGlobalScope? previous)
@@ -55,7 +55,41 @@ internal sealed class Binder
 
 	public DiagnosticBag Diagnostics => _diagnostics;
 
-	public BoundExpression BindExpression(ExpressionSyntax syntax)
+	private BoundStatement BindStatement(StatementSyntax syntax)
+	{
+		switch (syntax.Kind)
+		{
+			case SyntaxKind.BlockStatement:
+				return BindBlockStatement((BlockStatementSyntax) syntax);
+
+			case SyntaxKind.ExpressionStatement:
+				return BindExpressionStatement((ExpressionStatementSyntax) syntax);
+
+			default:
+				throw new Exception($"Unexpected syntax {syntax.Kind}");
+		}
+	}
+
+	private BoundStatement BindBlockStatement(BlockStatementSyntax syntax)
+	{
+		ImmutableArray<BoundStatement>.Builder statements = ImmutableArray.CreateBuilder<BoundStatement>();
+
+		foreach (StatementSyntax statementSyntax in syntax.Statements)
+		{
+			BoundStatement statement = BindStatement(statementSyntax);
+			statements.Add(statement);
+		}
+
+		return new BoundBlockStatement(statements.ToImmutable());
+	}
+
+	private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
+	{
+		BoundExpression expression = BindExpression(syntax.Expression);
+		return new BoundExpressionStatement(expression);
+	}
+
+	private BoundExpression BindExpression(ExpressionSyntax syntax)
 	{
 		switch (syntax.Kind)
 		{
@@ -76,9 +110,10 @@ internal sealed class Binder
 
 			case SyntaxKind.BinaryExpression:
 				return BindBinaryExpression((BinaryExpressionSyntax) syntax);
-		}
 
-		throw new Exception($"Unexpected syntax {syntax.Kind}");
+			default:
+				throw new Exception($"Unexpected syntax {syntax.Kind}");
+		}
 	}
 
 	private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax) => BindExpression(syntax.Expression);
