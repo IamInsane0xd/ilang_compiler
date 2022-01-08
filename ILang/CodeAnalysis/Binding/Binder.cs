@@ -6,7 +6,7 @@ namespace ILang.CodeAnalysis.Binding;
 internal sealed class Binder
 {
 	private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
-	private BoundScope _scope;
+	private BoundScope? _scope;
 
 	public Binder(BoundScope? parent)
 	{
@@ -18,7 +18,7 @@ internal sealed class Binder
 		BoundScope? parentScope = CreateParentScopes(previous);
 		Binder binder = new Binder(parentScope);
 		BoundStatement statement = binder.BindStatement(syntax.Statement);
-		ImmutableArray<VariableSymbol> variables = binder._scope.GetDeclaredVariables();
+		ImmutableArray<VariableSymbol> variables = binder._scope?.GetDeclaredVariables() ?? throw new ArgumentNullException(nameof(_scope));
 		ImmutableArray<Diagnostic> diagnostics = binder.Diagnostics.ToImmutableArray();
 
 		if (previous != null)
@@ -62,6 +62,9 @@ internal sealed class Binder
 			case SyntaxKind.BlockStatement:
 				return BindBlockStatement((BlockStatementSyntax) syntax);
 
+			case SyntaxKind.VariableDeclaration:
+				return BindVariableDeclaration((VariableDeclarationSyntax) syntax);
+
 			case SyntaxKind.ExpressionStatement:
 				return BindExpressionStatement((ExpressionStatementSyntax) syntax);
 
@@ -73,6 +76,7 @@ internal sealed class Binder
 	private BoundStatement BindBlockStatement(BlockStatementSyntax syntax)
 	{
 		ImmutableArray<BoundStatement>.Builder statements = ImmutableArray.CreateBuilder<BoundStatement>();
+		_scope = new BoundScope(_scope);
 
 		foreach (StatementSyntax statementSyntax in syntax.Statements)
 		{
@@ -80,7 +84,22 @@ internal sealed class Binder
 			statements.Add(statement);
 		}
 
+		_scope = _scope.Parent;
+
 		return new BoundBlockStatement(statements.ToImmutable());
+	}
+
+	private BoundStatement BindVariableDeclaration(VariableDeclarationSyntax syntax)
+	{
+		string name = syntax.Identifier.Text ?? throw new ArgumentNullException(nameof(syntax.Identifier.Text));
+		bool isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
+		BoundExpression initializer = BindExpression(syntax.Initializer);
+		VariableSymbol variable = new VariableSymbol(name, isReadOnly, initializer.Type);
+
+		if (!_scope?.TryDeclare(variable) ?? throw new ArgumentNullException(nameof(_scope)))
+			_diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
+
+		return new BoundVariableDeclaration(variable, initializer);
 	}
 
 	private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
@@ -134,6 +153,9 @@ internal sealed class Binder
 			return new BoundLiteralExpression(0);
 		}
 
+		if (_scope == null)
+			throw new ArgumentNullException(nameof(_scope));
+
 		if (!_scope.TryLookup(name, out VariableSymbol? variable))
 		{
 			_diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
@@ -148,20 +170,23 @@ internal sealed class Binder
 
 	private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax syntax)
 	{
-		string? name = syntax.IdentifierToken.Text;
+		string name = syntax.IdentifierToken.Text ?? throw new ArgumentNullException(nameof(name));
 		BoundExpression boundExpression = BindExpression(syntax.Expression);
 
-		if (name == null)
-			throw new ArgumentNullException(nameof(name));
+		if (_scope == null)
+			throw new ArgumentNullException(nameof(_scope));
 
 		if (!_scope.TryLookup(name, out VariableSymbol? variable))
 		{
-			variable = new VariableSymbol(name, boundExpression.Type);
-			_scope.TryDeclare(variable);
+			_diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+			return boundExpression;
 		}
 
 		if (variable == null)
 			throw new ArgumentNullException(nameof(variable));
+
+		if (variable.IsReadOnly)
+			_diagnostics.ReportCannotAssign(syntax.EqualsToken.Span, name);
 
 		if (boundExpression.Type != variable.Type)
 		{

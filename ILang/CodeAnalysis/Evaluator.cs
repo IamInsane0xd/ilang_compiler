@@ -28,6 +28,10 @@ internal sealed class Evaluator
 				EvaluateBlockStatement((BoundBlockStatement) node);
 				break;
 
+			case BoundNodeKind.VariableDeclaration:
+				EvaluateVariableDeclaration((BoundVariableDeclaration) node);
+				break;
+
 			case BoundNodeKind.ExpressionStatement:
 				EvaluateExpressionStatement((BoundExpressionStatement) node);
 				break;
@@ -41,6 +45,13 @@ internal sealed class Evaluator
 	{
 		foreach (var statement in node.Statements)
 			EvaluateStatement(statement);
+	}
+
+	private void EvaluateVariableDeclaration(BoundVariableDeclaration node)
+	{
+		object? value = EvaluateExpression(node.Initializer);
+		_variables[node.Variable] = value;
+		_lastValue = value;
 	}
 
 	private void EvaluateExpressionStatement(BoundExpressionStatement node) => _lastValue = EvaluateExpression(node.Expression);

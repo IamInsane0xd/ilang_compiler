@@ -70,10 +70,18 @@ internal sealed class Parser
 
 	private StatementSyntax ParseStatement()
 	{
-		if (Current.Kind == SyntaxKind.OpenBraceToken)
-			return ParseBlockStatement();
+		switch (Current.Kind)
+		{
+			case SyntaxKind.OpenBraceToken:
+				return ParseBlockStatement();
 
-		return ParseExpressionStatement();
+			case SyntaxKind.LetKeyword:
+			case SyntaxKind.VarKeyword:
+				return ParseVariableDeclaration();
+
+			default:
+				return ParseExpressionStatement();
+		}
 	}
 
 	private BlockStatementSyntax ParseBlockStatement()
@@ -91,6 +99,17 @@ internal sealed class Parser
 		SyntaxToken closeBraceToken = MatchToken(SyntaxKind.CloseBraceToken);
 
 		return new BlockStatementSyntax(openBraceToken, statements.ToImmutable(), closeBraceToken);
+	}
+
+	private StatementSyntax ParseVariableDeclaration()
+	{
+		SyntaxKind expected = Current.Kind == SyntaxKind.LetKeyword ? SyntaxKind.LetKeyword : SyntaxKind.VarKeyword;
+		SyntaxToken keyword = MatchToken(expected);
+		SyntaxToken identifier = MatchToken(SyntaxKind.IdentifierToken);
+		SyntaxToken equals = MatchToken(SyntaxKind.EqualsToken);
+		ExpressionSyntax initializer = ParseExpression();
+
+		return new VariableDeclarationSyntax(keyword, identifier, equals, initializer);
 	}
 
 	private ExpressionStatementSyntax ParseExpressionStatement()

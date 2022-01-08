@@ -52,9 +52,16 @@ public static class SyntacFacts
 
 			case "false":
 				return SyntaxKind.FalseKeyword;
-		}
 
-		return SyntaxKind.IdentifierToken;
+			case "let":
+				return SyntaxKind.LetKeyword;
+
+			case "var":
+				return SyntaxKind.VarKeyword;
+
+			default:
+				return SyntaxKind.IdentifierToken;
+		}
 	}
 
 	public static IEnumerable<SyntaxKind> GetUnaryOperatorKinds()
@@ -130,8 +137,15 @@ public static class SyntacFacts
 
 			case SyntaxKind.TrueKeyword:
 				return "true";
-		}
 
-		return null;
+			case SyntaxKind.LetKeyword:
+				return "let";
+
+			case SyntaxKind.VarKeyword:
+				return "var";
+
+			default:
+				return null;
+		}
 	}
 }

@@ -62,4 +62,16 @@ internal sealed class DiagnosticBag : IEnumerable<Diagnostic>
 		string message = $"Error: Cannot convert type {fromType} to {toType}";
 		Report(span, message);
 	}
+
+	public void ReportVariableAlreadyDeclared(TextSpan span, string name)
+	{
+		string message = $"Error: Variable '{name}' is already declared";
+		Report(span, message);
+	}
+
+	public void ReportCannotAssign(TextSpan span, string name)
+	{
+		string message = $"Error: Variable '{name}' is read-only and cannot be assigned to";
+		Report(span, message);
+	}
 }
