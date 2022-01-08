@@ -17,10 +17,18 @@ internal static class Program
 		while (true)
 		{
 			if (textBuilder.Length == 0)
-				Console.Write(">>> ");
+			{
+				Console.ForegroundColor = ConsoleColor.DarkGreen;
+				Console.Write("» ");
+			}
 
 			else
-				Console.Write("... ");
+			{
+				Console.ForegroundColor = ConsoleColor.DarkGray;
+				Console.Write("· ");
+			}
+
+			Console.ResetColor();
 
 			string? input = Console.ReadLine();
 			bool isBlank = string.IsNullOrWhiteSpace(input);
@@ -42,6 +50,7 @@ internal static class Program
 						continue;
 
 					case "#exit":
+						Console.ResetColor();
 						return;
 				}
 			}
@@ -67,8 +76,10 @@ internal static class Program
 
 			if (!diagnostics.Any())
 			{
+				Console.ForegroundColor = ConsoleColor.Magenta;
 				Console.WriteLine(result.Value);
 				Console.WriteLine();
+				Console.ResetColor();
 			}
 
 			else
