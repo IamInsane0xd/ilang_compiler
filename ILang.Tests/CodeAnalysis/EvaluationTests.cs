@@ -16,7 +16,6 @@ public class EvaluationTests
 	[InlineData("4 * 2", 8)]
 	[InlineData("9 / 3", 3)]
 	[InlineData("(1 + 2) * 3", 9)]
-	[InlineData("(a = 10) * a", 100)]
 	[InlineData("12 == 3", false)]
 	[InlineData("2 == 2", true)]
 	[InlineData("12 != 3", true)]
@@ -29,6 +28,7 @@ public class EvaluationTests
 	[InlineData("!true", false)]
 	[InlineData("false", false)]
 	[InlineData("!false", true)]
+	[InlineData("{ var a = 0 (a = 10) * a }", 100)]
 	public void SyntaxFactGetTextRoundTrips(string text, object expectedValue)
 	{
 		SyntaxTree syntaxTree = SyntaxTree.Parse(text);
