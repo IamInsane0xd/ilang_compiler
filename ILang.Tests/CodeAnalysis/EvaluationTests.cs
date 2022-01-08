@@ -1,5 +1,7 @@
 ﻿using ILang.CodeAnalysis;
 using ILang.CodeAnalysis.Syntax;
+using ILang.CodeAnalysis.Text;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -29,7 +31,139 @@ public class EvaluationTests
 	[InlineData("false", false)]
 	[InlineData("!false", true)]
 	[InlineData("{ var a = 0 (a = 10) * a }", 100)]
-	public void SyntaxFactGetTextRoundTrips(string text, object expectedValue)
+	public void EvaluatorComputesCorrectValues(string text, object expectedValue)
+	{
+		AssertValue(text, expectedValue);
+	}
+
+	[Fact]
+	public void EvaluatorVariableDeclarationReportsRedeclaration()
+	{
+		var text =
+		@"
+			{
+				var x = 10
+				var y = 100
+
+				{
+					var x = 10
+				}
+
+				var [x] = 5
+			}
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is already declared
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorNameReportsUndefined()
+	{
+		var text =
+		@"
+			[x] + 1
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is not defined
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorAssignmentReportsUndefined()
+	{
+		var text =
+		@"
+			[x] = 1
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is not defined
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorAssignmentReportsCannotBeAssigned()
+	{
+		var text =
+		@"
+			{
+				let x = 1
+				x [=] 0
+			}
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is read-only and cannot be assigned to
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorAssignmentReportsCannotConvert()
+	{
+		var text =
+		@"
+			{
+				var x = 1
+				x = [true]
+			}
+		";
+
+		var diagnostics =
+		@"
+			Error: Cannot convert type System.Boolean to System.Int32
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorUnaryReportsUndefined()
+	{
+		var text =
+		@"
+			[-]true
+		";
+
+		var diagnostics =
+		@"
+			Error: Unary operator '-' is not defined for type System.Boolean
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorBinaryReportsUndefined()
+	{
+		var text =
+		@"
+			1 [+] true
+		";
+
+		var diagnostics =
+		@"
+			Error: Binary operator '+' is not defined for types System.Int32 and System.Boolean
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	private static void AssertValue(string text, object expectedValue)
 	{
 		SyntaxTree syntaxTree = SyntaxTree.Parse(text);
 		Compilation compilation = new Compilation(syntaxTree);
@@ -38,5 +172,32 @@ public class EvaluationTests
 
 		Assert.Empty(result.Diagnostics);
 		Assert.Equal(expectedValue, result.Value);
+	}
+
+	private void AssertDiagnostics(string text, string diagnosticText)
+	{
+		AnnotatedText annotatedText = AnnotatedText.Parse(text);
+		SyntaxTree syntaxTree = SyntaxTree.Parse(annotatedText.Text);
+		Compilation compilation = new Compilation(syntaxTree);
+		EvaluationResult result = compilation.Evaluate(new Dictionary<VariableSymbol, object?>());
+		string[] expectedDiagnostics = AnnotatedText.UnindentLines(diagnosticText);
+
+		if (annotatedText.Spans.Length != expectedDiagnostics.Length)
+			throw new Exception("Error: Must mark as many spans as there are expected diagnostics");
+
+		Assert.Equal(expectedDiagnostics.Length, result.Diagnostics.Length);
+
+		for (int i = 0; i < expectedDiagnostics.Length; i++)
+		{
+			string expectedMessage = expectedDiagnostics[i];
+			string actualMessage = result.Diagnostics[i].Message;
+
+			Assert.Equal(expectedMessage, actualMessage);
+
+			TextSpan expectedSpan = annotatedText.Spans[i];
+			TextSpan actualSpan = result.Diagnostics[i].Span;
+
+			Assert.Equal(expectedSpan, actualSpan);
+		}
 	}
 }
