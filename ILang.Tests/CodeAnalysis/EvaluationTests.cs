@@ -75,6 +75,25 @@ public class EvaluationTests
 	}
 
 	[Fact]
+	public void EvaluatorBlockStatementNoInfiniteLoop()
+	{
+		string text =
+		@"
+			{
+			([[[]]]
+		";
+
+		string diagnostics =
+		@"
+			Error: Unexpected token <EndOfFileToken>, expected <IdentifierToken>
+			Error: Unexpected token <EndOfFileToken>, expected <CloseParenthesisToken>
+			Error: Unexpected token <EndOfFileToken>, expected <CloseBraceToken>
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
 	public void EvaluatorIfStatementReportsCannotConvert()
 	{
 		string text =
@@ -169,6 +188,22 @@ public class EvaluationTests
 		string diagnostics =
 		@"
 			Error: Variable 'x' is not defined
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorNameExpressionReportsNoErrorForInsertedToken()
+	{
+		string text =
+		@"
+			[]
+		";
+
+		string diagnostics =
+		@"
+			Error: Unexpected token <EndOfFileToken>, expected <IdentifierToken>
 		";
 
 		AssertDiagnostics(text, diagnostics);

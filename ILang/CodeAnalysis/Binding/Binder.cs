@@ -201,13 +201,10 @@ internal sealed class Binder
 
 	private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
 	{
-		string? name = syntax.IdentifierToken.Text;
+		string name = syntax.IdentifierToken.Text;
 
-		if (name == null)
-		{
-			_diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, "");
+		if (string.IsNullOrEmpty(name))
 			return new BoundLiteralExpression(0);
-		}
 
 		if (_scope == null)
 			throw new ArgumentNullException(nameof(_scope));
