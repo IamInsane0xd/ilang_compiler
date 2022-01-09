@@ -330,7 +330,7 @@ public class EvaluationTests
 		Assert.Equal(expectedValue, result.Value);
 	}
 
-	private void AssertDiagnostics(string text, string diagnosticText)
+	private static void AssertDiagnostics(string text, string diagnosticText)
 	{
 		AnnotatedText annotatedText = AnnotatedText.Parse(text);
 		SyntaxTree syntaxTree = SyntaxTree.Parse(annotatedText.Text);

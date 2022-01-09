@@ -19,36 +19,32 @@ public class ParserTests
 
 		if (op1Precedence >= op2Precedence)
 		{
-			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
-			{
-				e.AssertNode(SyntaxKind.BinaryExpression);
-				e.AssertNode(SyntaxKind.BinaryExpression);
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "a");
-				e.AssertToken(op1, op1Text ?? "");
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "b");
-				e.AssertToken(op2, op2Text ?? "");
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "c");
-			}
+			using AssertingEnumerator? e = new AssertingEnumerator(expression);
+			e.AssertNode(SyntaxKind.BinaryExpression);
+			e.AssertNode(SyntaxKind.BinaryExpression);
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "a");
+			e.AssertToken(op1, op1Text ?? "");
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "b");
+			e.AssertToken(op2, op2Text ?? "");
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "c");
 		}
 
 		else
 		{
-			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
-			{
-				e.AssertNode(SyntaxKind.BinaryExpression);
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "a");
-				e.AssertToken(op1, op1Text ?? "");
-				e.AssertNode(SyntaxKind.BinaryExpression);
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "b");
-				e.AssertToken(op2, op2Text ?? "");
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "c");
-			}
+			using AssertingEnumerator? e = new AssertingEnumerator(expression);
+			e.AssertNode(SyntaxKind.BinaryExpression);
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "a");
+			e.AssertToken(op1, op1Text ?? "");
+			e.AssertNode(SyntaxKind.BinaryExpression);
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "b");
+			e.AssertToken(op2, op2Text ?? "");
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "c");
 		}
 	}
 
@@ -65,33 +61,29 @@ public class ParserTests
 
 		if (unaryPrecedence >= binaryPrecedence)
 		{
-			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
-			{
-				e.AssertNode(SyntaxKind.BinaryExpression);
-				e.AssertNode(SyntaxKind.UnaryExpression);
-				e.AssertToken(unaryKind, unaryText ?? "");
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "a");
-				e.AssertToken(binaryKind, binaryText ?? "");
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "b");
-			}
+			using AssertingEnumerator? e = new AssertingEnumerator(expression);
+			e.AssertNode(SyntaxKind.BinaryExpression);
+			e.AssertNode(SyntaxKind.UnaryExpression);
+			e.AssertToken(unaryKind, unaryText ?? "");
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "a");
+			e.AssertToken(binaryKind, binaryText ?? "");
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "b");
 		}
 
 		else
 		{
-			using (AssertingEnumerator? e = new AssertingEnumerator(expression))
-			{
-				e.AssertNode(SyntaxKind.UnaryExpression);
-				e.AssertToken(unaryKind, unaryText ?? "");
-				e.AssertNode(SyntaxKind.BinaryExpression);
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "a");
-				e.AssertToken(binaryKind, binaryText ?? "");
-				e.AssertNode(SyntaxKind.NameExpression);
-				e.AssertToken(SyntaxKind.IdentifierToken, "b");
-				e.AssertNode(SyntaxKind.NameExpression);
-			}
+			using AssertingEnumerator? e = new AssertingEnumerator(expression);
+			e.AssertNode(SyntaxKind.UnaryExpression);
+			e.AssertToken(unaryKind, unaryText ?? "");
+			e.AssertNode(SyntaxKind.BinaryExpression);
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "a");
+			e.AssertToken(binaryKind, binaryText ?? "");
+			e.AssertNode(SyntaxKind.NameExpression);
+			e.AssertToken(SyntaxKind.IdentifierToken, "b");
+			e.AssertNode(SyntaxKind.NameExpression);
 		}
 	}
 

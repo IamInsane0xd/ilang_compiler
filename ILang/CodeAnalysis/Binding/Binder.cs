@@ -57,29 +57,16 @@ internal sealed class Binder
 
 	private BoundStatement BindStatement(StatementSyntax syntax)
 	{
-		switch (syntax.Kind)
+		return syntax.Kind switch
 		{
-			case SyntaxKind.BlockStatement:
-				return BindBlockStatement((BlockStatementSyntax) syntax);
-
-			case SyntaxKind.VariableDeclaration:
-				return BindVariableDeclaration((VariableDeclarationSyntax) syntax);
-
-			case SyntaxKind.IfStatement:
-				return BindIfStatement((IfStatementSyntax) syntax);
-
-			case SyntaxKind.WhileStatement:
-				return BindWhileStatement((WhileStatementSyntax) syntax);
-
-			case SyntaxKind.ForStatement:
-				return BindForStatement((ForStatementSyntax) syntax);
-
-			case SyntaxKind.ExpressionStatement:
-				return BindExpressionStatement((ExpressionStatementSyntax) syntax);
-
-			default:
-				throw new Exception($"Unexpected syntax {syntax.Kind}");
-		}
+			SyntaxKind.BlockStatement => BindBlockStatement((BlockStatementSyntax) syntax),
+			SyntaxKind.VariableDeclaration => BindVariableDeclaration((VariableDeclarationSyntax) syntax),
+			SyntaxKind.IfStatement => BindIfStatement((IfStatementSyntax) syntax),
+			SyntaxKind.WhileStatement => BindWhileStatement((WhileStatementSyntax) syntax),
+			SyntaxKind.ForStatement => BindForStatement((ForStatementSyntax) syntax),
+			SyntaxKind.ExpressionStatement => BindExpressionStatement((ExpressionStatementSyntax) syntax),
+			_ => throw new Exception($"Unexpected syntax {syntax.Kind}"),
+		};
 	}
 
 	private BoundStatement BindBlockStatement(BlockStatementSyntax syntax)
@@ -166,34 +153,21 @@ internal sealed class Binder
 
 	private BoundExpression BindExpression(ExpressionSyntax syntax)
 	{
-		switch (syntax.Kind)
+		return syntax.Kind switch
 		{
-			case SyntaxKind.ParenthesizedExpression:
-				return BindParenthesizedExpression((ParenthesizedExpressionSyntax) syntax);
-
-			case SyntaxKind.LiteralExpression:
-				return BindLiteralExpression((LiteralExpressionSyntax) syntax);
-
-			case SyntaxKind.NameExpression:
-				return BindNameExpression((NameExpressionSyntax) syntax);
-
-			case SyntaxKind.AssignmentExpression:
-				return BindAssignmentExpression((AssignmentExpressionSyntax) syntax);
-
-			case SyntaxKind.UnaryExpression:
-				return BindUnaryExpression((UnaryExpressionSyntax) syntax);
-
-			case SyntaxKind.BinaryExpression:
-				return BindBinaryExpression((BinaryExpressionSyntax) syntax);
-
-			default:
-				throw new Exception($"Unexpected syntax {syntax.Kind}");
-		}
+			SyntaxKind.ParenthesizedExpression => BindParenthesizedExpression((ParenthesizedExpressionSyntax) syntax),
+			SyntaxKind.LiteralExpression => BindLiteralExpression((LiteralExpressionSyntax) syntax),
+			SyntaxKind.NameExpression => BindNameExpression((NameExpressionSyntax) syntax),
+			SyntaxKind.AssignmentExpression => BindAssignmentExpression((AssignmentExpressionSyntax) syntax),
+			SyntaxKind.UnaryExpression => BindUnaryExpression((UnaryExpressionSyntax) syntax),
+			SyntaxKind.BinaryExpression => BindBinaryExpression((BinaryExpressionSyntax) syntax),
+			_ => throw new Exception($"Unexpected syntax {syntax.Kind}"),
+		};
 	}
 
 	private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax) => BindExpression(syntax.Expression);
 
-	private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
+	private static BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
 	{
 		object value = syntax.Value ?? 0;
 		return new BoundLiteralExpression(value);
@@ -223,7 +197,7 @@ internal sealed class Binder
 
 	private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax syntax)
 	{
-		string name = syntax.IdentifierToken.Text ?? throw new ArgumentNullException(nameof(name));
+		string name = syntax.IdentifierToken.Text ?? throw new ArgumentNullException(nameof(syntax.IdentifierToken.Text));
 		BoundExpression boundExpression = BindExpression(syntax.Expression);
 
 		if (_scope == null)

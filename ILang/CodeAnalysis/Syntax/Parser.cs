@@ -38,7 +38,7 @@ internal sealed class Parser
 		int index = _position + offset;
 
 		if (index >= _tokens.Length)
-			return _tokens[_tokens.Length - 1];
+			return _tokens[^1];
 
 		return _tokens[index];
 	}
@@ -70,27 +70,15 @@ internal sealed class Parser
 
 	private StatementSyntax ParseStatement()
 	{
-		switch (Current.Kind)
+		return Current.Kind switch
 		{
-			case SyntaxKind.OpenBraceToken:
-				return ParseBlockStatement();
-
-			case SyntaxKind.LetKeyword:
-			case SyntaxKind.VarKeyword:
-				return ParseVariableDeclaration();
-
-			case SyntaxKind.IfKeyword:
-				return ParseIfStatement();
-
-			case SyntaxKind.WhileKeyword:
-				return ParseWhileStatement();
-
-			case SyntaxKind.ForKeyword:
-				return ParseForStatement();
-
-			default:
-				return ParseExpressionStatement();
-		}
+			SyntaxKind.OpenBraceToken => ParseBlockStatement(),
+			SyntaxKind.LetKeyword or SyntaxKind.VarKeyword => ParseVariableDeclaration(),
+			SyntaxKind.IfKeyword => ParseIfStatement(),
+			SyntaxKind.WhileKeyword => ParseWhileStatement(),
+			SyntaxKind.ForKeyword => ParseForStatement(),
+			_ => ParseExpressionStatement(),
+		};
 	}
 
 	private BlockStatementSyntax ParseBlockStatement()
@@ -226,21 +214,13 @@ internal sealed class Parser
 
 	private ExpressionSyntax ParsePrimaryExpression()
 	{
-		switch (Current.Kind)
+		return Current.Kind switch
 		{
-			case SyntaxKind.OpenParenthesisToken:
-				return ParseParenthesizedExpression();
-
-			case SyntaxKind.TrueKeyword:
-			case SyntaxKind.FalseKeyword:
-				return ParseBooleanLiteral();
-
-			case SyntaxKind.NumberToken:
-				return ParseNumberLiteral();
-
-			default:
-				return ParseNameExpression();
-		}
+			SyntaxKind.OpenParenthesisToken => ParseParenthesizedExpression(),
+			SyntaxKind.TrueKeyword or SyntaxKind.FalseKeyword => ParseBooleanLiteral(),
+			SyntaxKind.NumberToken => ParseNumberLiteral(),
+			_ => ParseNameExpression(),
+		};
 	}
 
 	private ExpressionSyntax ParseParenthesizedExpression()

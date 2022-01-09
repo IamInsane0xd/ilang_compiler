@@ -11,6 +11,7 @@ internal static class Program
 	private static void Main()
 	{
 		bool showTree = false;
+		bool showProgram = false;
 		Dictionary<VariableSymbol, object?> variables = new Dictionary<VariableSymbol, object?>();
 		StringBuilder textBuilder = new StringBuilder();
 		Compilation? previous = null;
@@ -39,7 +40,12 @@ internal static class Program
 				{
 					case "#showTree":
 						showTree = !showTree;
-						Console.WriteLine(showTree ? "Showing parse tree" : "Not showing parse tree");
+						Console.WriteLine(showTree ? "Showing parse tree\n" : "Not showing parse tree\n");
+						continue;
+
+					case "#showProgram":
+						showProgram = !showProgram;
+						Console.WriteLine(showProgram ? "Showing bound tree\n" : "Not showing bound tree\n");
 						continue;
 
 					case "#clear":
@@ -72,8 +78,18 @@ internal static class Program
 			if (showTree)
 			{
 				Console.ForegroundColor = ConsoleColor.DarkGray;
+				Console.WriteLine("Parse tree:");
 				syntaxTree.Root.WriteTo(Console.Out);
-				Console.ResetColor();
+
+				if (showProgram)
+					Console.WriteLine();
+			}
+
+			if (showProgram)
+			{
+				Console.ForegroundColor = ConsoleColor.DarkGray;
+				Console.WriteLine("Bound tree:");
+				compilation.EmitTree(Console.Out);
 			}
 
 			if (!diagnostics.Any())

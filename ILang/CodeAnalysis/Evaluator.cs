@@ -97,26 +97,15 @@ internal sealed class Evaluator
 
 	private object? EvaluateExpression(BoundExpression node)
 	{
-		switch (node.Kind)
+		return node.Kind switch
 		{
-			case BoundNodeKind.LiteralExpression:
-				return EvaluateLiteralExpression((BoundLiteralExpression) node);
-
-			case BoundNodeKind.VariableExpression:
-				return EvaluateVariableExpression((BoundVariableExpression) node);
-
-			case BoundNodeKind.AssignmentExpression:
-				return EvaluateAssignmentExpression((BoundAssignmentExpression) node);
-
-			case BoundNodeKind.UnaryExpression:
-				return EvaluateUnaryExpression((BoundUnaryExpression) node);
-
-			case BoundNodeKind.BinaryExpression:
-				return EvaluateBinaryExpression((BoundBinaryExpression) node);
-
-			default:
-				throw new Exception($"Unexpected node {node.Kind}");
-		}
+			BoundNodeKind.LiteralExpression => EvaluateLiteralExpression((BoundLiteralExpression) node),
+			BoundNodeKind.VariableExpression => EvaluateVariableExpression((BoundVariableExpression) node),
+			BoundNodeKind.AssignmentExpression => EvaluateAssignmentExpression((BoundAssignmentExpression) node),
+			BoundNodeKind.UnaryExpression => EvaluateUnaryExpression((BoundUnaryExpression) node),
+			BoundNodeKind.BinaryExpression => EvaluateBinaryExpression((BoundBinaryExpression) node),
+			_ => throw new Exception($"Unexpected node {node.Kind}"),
+		};
 	}
 
 	private static object EvaluateLiteralExpression(BoundLiteralExpression l) => l.Value;
@@ -141,23 +130,14 @@ internal sealed class Evaluator
 		object operand;
 		operand = EvaluateExpression(u.Operand) ?? throw new ArgumentNullException(nameof(operand));
 
-		switch (u.Op.Kind)
+		return u.Op.Kind switch
 		{
-			case BoundUnaryOperatorKind.Identity:
-				return (int) operand;
-
-			case BoundUnaryOperatorKind.Negation:
-				return -(int) operand;
-
-			case BoundUnaryOperatorKind.LogicalNegation:
-				return !(bool) operand;
-
-			case BoundUnaryOperatorKind.OnesComplement:
-				return ~(int) operand;
-
-			default:
-				throw new Exception($"Unexpected unary operator {u.Op}");
-		}
+			BoundUnaryOperatorKind.Identity => (int) operand,
+			BoundUnaryOperatorKind.Negation => -(int) operand,
+			BoundUnaryOperatorKind.LogicalNegation => !(bool) operand,
+			BoundUnaryOperatorKind.OnesComplement => ~(int) operand,
+			_ => throw new Exception($"Unexpected unary operator {u.Op}"),
+		};
 	}
 
 	private object EvaluateBinaryExpression(BoundBinaryExpression b)

@@ -17,8 +17,6 @@ internal sealed class Lexer
 
 	private char Current => Peek(0);
 
-	private char Lookahead => Peek(1);
-
 	private char Peek(int offset)
 	{
 		int index = _position + offset;
