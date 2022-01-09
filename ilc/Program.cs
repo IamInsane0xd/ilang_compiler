@@ -17,17 +17,13 @@ internal static class Program
 
 		while (true)
 		{
+			Console.ForegroundColor = ConsoleColor.DarkGreen;
+
 			if (textBuilder.Length == 0)
-			{
-				Console.ForegroundColor = ConsoleColor.DarkGreen;
 				Console.Write("» ");
-			}
 
 			else
-			{
-				Console.ForegroundColor = ConsoleColor.DarkGray;
 				Console.Write("· ");
-			}
 
 			Console.ResetColor();
 
