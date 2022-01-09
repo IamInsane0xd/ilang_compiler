@@ -13,8 +13,12 @@ public enum SyntaxKind
 	SlashToken,
 	BangToken,
 	EqualsToken,
+	TildeToken,
+	AmpersandToken,
 	AmpersandAmpersandToken,
+	PipeToken,
 	PipePipeToken,
+	CaretToken, // ^
 	EqualsEqualsToken,
 	BangEqualsToken,
 	LessToken,
