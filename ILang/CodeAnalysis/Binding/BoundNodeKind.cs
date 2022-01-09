@@ -7,6 +7,7 @@ internal enum BoundNodeKind
 	VariableDeclaration,
 	IfStatement,
 	WhileStatement,
+	ForStatement,
 	ExpressionStatement,
 
 	// Expressions

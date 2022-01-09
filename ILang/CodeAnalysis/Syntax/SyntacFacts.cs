@@ -63,6 +63,9 @@ public static class SyntacFacts
 			case "var":
 				return SyntaxKind.VarKeyword;
 
+			case "to":
+				return SyntaxKind.ToKeyword;
+
 			case "if":
 				return SyntaxKind.IfKeyword;
 
@@ -71,6 +74,9 @@ public static class SyntacFacts
 
 			case "while":
 				return SyntaxKind.WhileKeyword;
+
+			case "for":
+				return SyntaxKind.ForKeyword;
 
 			default:
 				return SyntaxKind.IdentifierToken;
@@ -169,6 +175,9 @@ public static class SyntacFacts
 			case SyntaxKind.VarKeyword:
 				return "var";
 
+			case SyntaxKind.ToKeyword:
+				return "to";
+
 			case SyntaxKind.IfKeyword:
 				return "if";
 
@@ -177,6 +186,9 @@ public static class SyntacFacts
 
 			case SyntaxKind.WhileKeyword:
 				return "while";
+
+			case SyntaxKind.ForKeyword:
+				return "for";
 
 			default:
 				return null;

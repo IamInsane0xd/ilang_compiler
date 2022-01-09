@@ -114,7 +114,7 @@ internal static class Program
 					string suffix = syntaxTree.Text.ToString(suffixSpan);
 
 					Console.Write("   ");
-					Console.Write(prefix);
+					Console.Write(prefix.TrimStart());
 
 					Console.ForegroundColor = ConsoleColor.Red;
 					Console.Write(error);

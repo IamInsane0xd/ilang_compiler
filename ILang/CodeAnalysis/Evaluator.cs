@@ -40,6 +40,10 @@ internal sealed class Evaluator
 				EvaluateWhileStatement((BoundWhileStatement) node);
 				break;
 
+			case BoundNodeKind.ForStatement:
+				EvaluateForStatement((BoundForStatement) node);
+				break;
+
 			case BoundNodeKind.ExpressionStatement:
 				EvaluateExpressionStatement((BoundExpressionStatement) node);
 				break;
@@ -64,9 +68,7 @@ internal sealed class Evaluator
 
 	private void EvaluateIfStatement(BoundIfStatement node)
 	{
-		bool condition = (bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition)));
-
-		if (condition)
+		if ((bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition))))
 			EvaluateStatement(node.ThenStatement);
 
 		else if (node.ElseStatement != null)
@@ -75,12 +77,19 @@ internal sealed class Evaluator
 
 	private void EvaluateWhileStatement(BoundWhileStatement node)
 	{
-		bool condition = (bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition)));
-
-		while (condition)
-		{
+		while ((bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition))))
 			EvaluateStatement(node.Body);
-			condition = (bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition)));
+	}
+
+	private void EvaluateForStatement(BoundForStatement node)
+	{
+		int lowerBound = (int) (EvaluateExpression(node.LowerBound) ?? throw new ArgumentNullException(nameof(node.LowerBound)));
+		int upperBound = (int) (EvaluateExpression(node.UpperBound) ?? throw new ArgumentNullException(nameof(node.UpperBound)));
+
+		for (int i = lowerBound; i <= upperBound; i++)
+		{
+			_variables[node.Variable] = i;
+			EvaluateStatement(node.Body);
 		}
 	}
 
