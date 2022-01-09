@@ -80,13 +80,12 @@ public class EvaluationTests
 		string text =
 		@"
 			{
-			([[[]]]
+			[)][]
 		";
 
 		string diagnostics =
 		@"
-			Error: Unexpected token <EndOfFileToken>, expected <IdentifierToken>
-			Error: Unexpected token <EndOfFileToken>, expected <CloseParenthesisToken>
+			Error: Unexpected token <CloseParenthesisToken>, expected <IdentifierToken>
 			Error: Unexpected token <EndOfFileToken>, expected <CloseBraceToken>
 		";
 
