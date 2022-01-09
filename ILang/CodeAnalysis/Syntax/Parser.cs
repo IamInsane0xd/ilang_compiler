@@ -79,6 +79,12 @@ internal sealed class Parser
 			case SyntaxKind.VarKeyword:
 				return ParseVariableDeclaration();
 
+			case SyntaxKind.IfKeyword:
+				return ParseIfStatement();
+
+			case SyntaxKind.WhileKeyword:
+				return ParseWhileStatement();
+
 			default:
 				return ParseExpressionStatement();
 		}
@@ -92,8 +98,13 @@ internal sealed class Parser
 
 		while (Current.Kind != SyntaxKind.EndOfFileToken && Current.Kind != SyntaxKind.CloseBraceToken)
 		{
+			SyntaxToken startToken = Current;
 			StatementSyntax statement = ParseStatement();
+
 			statements.Add(statement);
+
+			if (Current == startToken)
+				NextToken();
 		}
 
 		SyntaxToken closeBraceToken = MatchToken(SyntaxKind.CloseBraceToken);
@@ -110,6 +121,36 @@ internal sealed class Parser
 		ExpressionSyntax initializer = ParseExpression();
 
 		return new VariableDeclarationSyntax(keyword, identifier, equals, initializer);
+	}
+
+	private StatementSyntax ParseIfStatement()
+	{
+		SyntaxToken keyword = MatchToken(SyntaxKind.IfKeyword);
+		ExpressionSyntax condition = ParseExpression();
+		StatementSyntax statement = ParseStatement();
+		ElseClauseSyntax? elseClause = ParseElseClause();
+
+		return new IfStatementSyntax(keyword, condition, statement, elseClause);
+	}
+
+	private ElseClauseSyntax? ParseElseClause()
+	{
+		if (Current.Kind != SyntaxKind.ElseKeyword)
+			return null;
+
+		SyntaxToken keyword = NextToken();
+		StatementSyntax statement = ParseStatement();
+
+		return new ElseClauseSyntax(keyword, statement);
+	}
+
+	private StatementSyntax ParseWhileStatement()
+	{
+		SyntaxToken keyword = MatchToken(SyntaxKind.WhileKeyword);
+		ExpressionSyntax condition = ParseExpression();
+		StatementSyntax body = ParseStatement();
+
+		return new WhileStatementSyntax(keyword, condition, body);
 	}
 
 	private ExpressionStatementSyntax ParseExpressionStatement()

@@ -65,6 +65,12 @@ internal sealed class Binder
 			case SyntaxKind.VariableDeclaration:
 				return BindVariableDeclaration((VariableDeclarationSyntax) syntax);
 
+			case SyntaxKind.IfStatement:
+				return BindIfStatement((IfStatementSyntax) syntax);
+
+			case SyntaxKind.WhileStatement:
+				return BindWhileStatement((WhileStatementSyntax) syntax);
+
 			case SyntaxKind.ExpressionStatement:
 				return BindExpressionStatement((ExpressionStatementSyntax) syntax);
 
@@ -102,10 +108,37 @@ internal sealed class Binder
 		return new BoundVariableDeclaration(variable, initializer);
 	}
 
+	private BoundStatement BindIfStatement(IfStatementSyntax syntax)
+	{
+		BoundExpression condition = BindExpression(syntax.Condition, typeof(bool));
+		BoundStatement thenStatement = BindStatement(syntax.ThenStatement);
+		BoundStatement? elseStatement = syntax.ElseClause == null ? null : BindStatement(syntax.ElseClause.ElseStatement);
+
+		return new BoundIfStatement(condition, thenStatement, elseStatement);
+	}
+
+	private BoundStatement BindWhileStatement(WhileStatementSyntax syntax)
+	{
+		BoundExpression condition = BindExpression(syntax.Condition, typeof(bool));
+		BoundStatement body = BindStatement(syntax.Body);
+
+		return new BoundWhileStatement(condition, body);
+	}
+
 	private BoundStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
 	{
 		BoundExpression expression = BindExpression(syntax.Expression);
 		return new BoundExpressionStatement(expression);
+	}
+
+	private BoundExpression BindExpression(ExpressionSyntax syntax, Type targetType)
+	{
+		BoundExpression result = BindExpression(syntax);
+
+		if (result.Type != targetType)
+			_diagnostics.ReportCannotConvert(syntax.Span, result.Type, targetType);
+
+		return result;
 	}
 
 	private BoundExpression BindExpression(ExpressionSyntax syntax)

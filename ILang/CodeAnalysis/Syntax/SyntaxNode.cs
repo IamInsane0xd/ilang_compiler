@@ -26,7 +26,9 @@ public abstract class SyntaxNode
 			if (typeof(SyntaxNode).IsAssignableFrom(property.PropertyType))
 			{
 				SyntaxNode? child = (SyntaxNode?) property.GetValue(this);
-				yield return child ?? throw new ArgumentNullException(nameof(child));
+
+				if (child != null)
+					yield return child;
 			}
 
 			else if (typeof(IEnumerable<SyntaxNode>).IsAssignableFrom(property.PropertyType))
@@ -34,7 +36,8 @@ public abstract class SyntaxNode
 				IEnumerable<SyntaxNode>? children = (IEnumerable<SyntaxNode>?) property.GetValue(this);
 
 				foreach (SyntaxNode child in children ?? throw new ArgumentNullException(nameof(children)))
-					yield return child;
+					if (child != null)
+						yield return child;
 			}
 		}
 	}

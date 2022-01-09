@@ -32,6 +32,14 @@ internal sealed class Evaluator
 				EvaluateVariableDeclaration((BoundVariableDeclaration) node);
 				break;
 
+			case BoundNodeKind.IfStatement:
+				EvaluateIfStatement((BoundIfStatement) node);
+				break;
+
+			case BoundNodeKind.WhileStatement:
+				EvaluateWhileStatement((BoundWhileStatement) node);
+				break;
+
 			case BoundNodeKind.ExpressionStatement:
 				EvaluateExpressionStatement((BoundExpressionStatement) node);
 				break;
@@ -52,6 +60,28 @@ internal sealed class Evaluator
 		object? value = EvaluateExpression(node.Initializer);
 		_variables[node.Variable] = value;
 		_lastValue = value;
+	}
+
+	private void EvaluateIfStatement(BoundIfStatement node)
+	{
+		bool condition = (bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition)));
+
+		if (condition)
+			EvaluateStatement(node.ThenStatement);
+
+		else if (node.ElseStatement != null)
+			EvaluateStatement(node.ElseStatement);
+	}
+
+	private void EvaluateWhileStatement(BoundWhileStatement node)
+	{
+		bool condition = (bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition)));
+
+		while (condition)
+		{
+			EvaluateStatement(node.Body);
+			condition = (bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition)));
+		}
 	}
 
 	private void EvaluateExpressionStatement(BoundExpressionStatement node) => _lastValue = EvaluateExpression(node.Expression);
