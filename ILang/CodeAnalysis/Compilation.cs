@@ -1,4 +1,5 @@
 using ILang.CodeAnalysis.Binding;
+using ILang.CodeAnalysis.Lowering;
 using ILang.CodeAnalysis.Syntax;
 using System.Collections.Immutable;
 
@@ -44,11 +45,22 @@ public sealed class Compilation
 		if (diagnostics.Any())
 			return new EvaluationResult(diagnostics, null);
 
-		Evaluator evaluator = new Evaluator(GlobalScope.Statement, variables);
+		BoundStatement statement = GetStatement();
+		Evaluator evaluator = new Evaluator(statement, variables);
 		object? value = evaluator.Evaluate();
 
 		return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
 	}
 
-	public void EmitTree(TextWriter writer) => GlobalScope.Statement.WriteTo(writer);
+	public void EmitTree(TextWriter writer)
+	{
+		BoundStatement statement = GetStatement();
+		statement.WriteTo(writer);
+	}
+
+	private BoundStatement GetStatement()
+	{
+		BoundStatement result = GlobalScope.Statement;
+		return Lowerer.Lower(result);
+	}
 }
