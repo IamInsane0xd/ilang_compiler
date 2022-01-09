@@ -52,7 +52,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorVariableDeclarationReportsRedeclaration()
 	{
-		var text =
+		string text =
 		@"
 			{
 				var x = 10
@@ -66,7 +66,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Variable 'x' is already declared
 		";
@@ -77,7 +77,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorIfStatementReportsCannotConvert()
 	{
-		var text =
+		string text =
 		@"
 			{
 				var x = 0
@@ -87,7 +87,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Cannot convert type System.Int32 to System.Boolean
 		";
@@ -98,7 +98,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorWhileStatementReportsCannotConvert()
 	{
-		var text =
+		string text =
 		@"
 			{
 				var x = 0
@@ -108,7 +108,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Cannot convert type System.Int32 to System.Boolean
 		";
@@ -119,7 +119,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorForStatementReportsCannotConvertLowerBound()
 	{
-		var text =
+		string text =
 		@"
 			{
 				var result = 0
@@ -129,7 +129,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Cannot convert type System.Boolean to System.Int32
 		";
@@ -140,7 +140,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorForStatementReportsCannotConvertUpperBound()
 	{
-		var text =
+		string text =
 		@"
 			{
 				var result = 0
@@ -150,7 +150,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Cannot convert type System.Boolean to System.Int32
 		";
@@ -161,12 +161,12 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorNameExpressionReportsUndefined()
 	{
-		var text =
+		string text =
 		@"
 			[x] + 1
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Variable 'x' is not defined
 		";
@@ -177,12 +177,12 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorAssignmentExpressionReportsUndefined()
 	{
-		var text =
+		string text =
 		@"
 			[x] = 1
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Variable 'x' is not defined
 		";
@@ -193,7 +193,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorAssignmentExpressionReportsCannotBeAssigned()
 	{
-		var text =
+		string text =
 		@"
 			{
 				let x = 1
@@ -201,7 +201,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Variable 'x' is read-only and cannot be assigned to
 		";
@@ -212,7 +212,7 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorAssignmentExpressionReportsCannotConvert()
 	{
-		var text =
+		string text =
 		@"
 			{
 				var x = 1
@@ -220,7 +220,7 @@ public class EvaluationTests
 			}
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Cannot convert type System.Boolean to System.Int32
 		";
@@ -232,12 +232,12 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorUnaryExpressionReportsUndefined()
 	{
-		var text =
+		string text =
 		@"
 			[-]true
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Unary operator '-' is not defined for type System.Boolean
 		";
@@ -248,12 +248,12 @@ public class EvaluationTests
 	[Fact]
 	public void EvaluatorBinaryExpressionReportsUndefined()
 	{
-		var text =
+		string text =
 		@"
 			1 [+] true
 		";
 
-		var diagnostics =
+		string diagnostics =
 		@"
 			Error: Binary operator '+' is not defined for types System.Int32 and System.Boolean
 		";
