@@ -75,76 +75,6 @@ public class EvaluationTests
 	}
 
 	[Fact]
-	public void EvaluatorNameReportsUndefined()
-	{
-		var text =
-		@"
-			[x] + 1
-		";
-
-		var diagnostics =
-		@"
-			Error: Variable 'x' is not defined
-		";
-
-		AssertDiagnostics(text, diagnostics);
-	}
-
-	[Fact]
-	public void EvaluatorAssignmentReportsUndefined()
-	{
-		var text =
-		@"
-			[x] = 1
-		";
-
-		var diagnostics =
-		@"
-			Error: Variable 'x' is not defined
-		";
-
-		AssertDiagnostics(text, diagnostics);
-	}
-
-	[Fact]
-	public void EvaluatorAssignmentReportsCannotBeAssigned()
-	{
-		var text =
-		@"
-			{
-				let x = 1
-				x [=] 0
-			}
-		";
-
-		var diagnostics =
-		@"
-			Error: Variable 'x' is read-only and cannot be assigned to
-		";
-
-		AssertDiagnostics(text, diagnostics);
-	}
-
-	[Fact]
-	public void EvaluatorAssignmentReportsCannotConvert()
-	{
-		var text =
-		@"
-			{
-				var x = 1
-				x = [true]
-			}
-		";
-
-		var diagnostics =
-		@"
-			Error: Cannot convert type System.Boolean to System.Int32
-		";
-
-		AssertDiagnostics(text, diagnostics);
-	}
-
-	[Fact]
 	public void EvaluatorIfStatementReportsCannotConvert()
 	{
 		var text =
@@ -229,7 +159,78 @@ public class EvaluationTests
 	}
 
 	[Fact]
-	public void EvaluatorUnaryReportsUndefined()
+	public void EvaluatorNameExpressionReportsUndefined()
+	{
+		var text =
+		@"
+			[x] + 1
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is not defined
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorAssignmentExpressionReportsUndefined()
+	{
+		var text =
+		@"
+			[x] = 1
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is not defined
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorAssignmentExpressionReportsCannotBeAssigned()
+	{
+		var text =
+		@"
+			{
+				let x = 1
+				x [=] 0
+			}
+		";
+
+		var diagnostics =
+		@"
+			Error: Variable 'x' is read-only and cannot be assigned to
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+	[Fact]
+	public void EvaluatorAssignmentExpressionReportsCannotConvert()
+	{
+		var text =
+		@"
+			{
+				var x = 1
+				x = [true]
+			}
+		";
+
+		var diagnostics =
+		@"
+			Error: Cannot convert type System.Boolean to System.Int32
+		";
+
+		AssertDiagnostics(text, diagnostics);
+	}
+
+
+	[Fact]
+	public void EvaluatorUnaryExpressionReportsUndefined()
 	{
 		var text =
 		@"
@@ -245,7 +246,7 @@ public class EvaluationTests
 	}
 
 	[Fact]
-	public void EvaluatorBinaryReportsUndefined()
+	public void EvaluatorBinaryExpressionReportsUndefined()
 	{
 		var text =
 		@"
