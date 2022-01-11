@@ -13,6 +13,9 @@ internal abstract class BoundTreeRewriter
 			BoundNodeKind.IfStatement => RewriteIfStatement((BoundIfStatement) node),
 			BoundNodeKind.WhileStatement => RewriteWhileStatement((BoundWhileStatement) node),
 			BoundNodeKind.ForStatement => RewriteForStatement((BoundForStatement) node),
+			BoundNodeKind.LabelStatement => RewriteLabelStatement((BoundLabelStatement) node),
+			BoundNodeKind.GotoStatement => RewriteGotoStatement((BoundGotoStatement) node),
+			BoundNodeKind.ConditionalGotoStatement => RewriteConditionalGotoStatement((BoundConditionalGotoStatement) node),
 			BoundNodeKind.ExpressionStatement => RewriteExpressionStatement((BoundExpressionStatement) node),
 			_ => throw new Exception($"Unexpected node: {node.Kind}"),
 		};
@@ -88,6 +91,20 @@ internal abstract class BoundTreeRewriter
 			return node;
 
 		return new BoundForStatement(node.Variable, lowerBound, upperBound, body);
+	}
+
+	protected virtual BoundStatement RewriteLabelStatement(BoundLabelStatement node) => node;
+
+	protected virtual BoundStatement RewriteGotoStatement(BoundGotoStatement node) => node;
+
+	protected virtual BoundStatement RewriteConditionalGotoStatement(BoundConditionalGotoStatement node)
+	{
+		BoundExpression condition = RewriteExpression(node.Condition);
+
+		if (condition == node.Condition)
+			return node;
+
+		return new BoundConditionalGotoStatement(node.Label, condition, node.JumpIfFalse);
 	}
 
 	protected virtual BoundStatement RewriteExpressionStatement(BoundExpressionStatement node)

@@ -1,7 +1,7 @@
 ﻿namespace ILang.CodeAnalysis;
 public sealed class VariableSymbol
 {
-	public VariableSymbol(string name, bool isReadOnly, Type type)
+	internal VariableSymbol(string name, bool isReadOnly, Type type)
 	{
 		Name = name;
 		IsReadOnly = isReadOnly;
@@ -11,4 +11,6 @@ public sealed class VariableSymbol
 	public string Name { get; }
 	public bool IsReadOnly { get; }
 	public Type Type { get; }
+
+	public override string ToString() => Name;
 }

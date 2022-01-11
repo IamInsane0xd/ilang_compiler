@@ -45,7 +45,7 @@ public sealed class Compilation
 		if (diagnostics.Any())
 			return new EvaluationResult(diagnostics, null);
 
-		BoundStatement statement = GetStatement();
+		BoundBlockStatement statement = GetStatement();
 		Evaluator evaluator = new Evaluator(statement, variables);
 		object? value = evaluator.Evaluate();
 
@@ -58,7 +58,7 @@ public sealed class Compilation
 		statement.WriteTo(writer);
 	}
 
-	private BoundStatement GetStatement()
+	private BoundBlockStatement GetStatement()
 	{
 		BoundStatement result = GlobalScope.Statement;
 		return Lowerer.Lower(result);

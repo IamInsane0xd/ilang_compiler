@@ -4,11 +4,11 @@ namespace ILang.CodeAnalysis;
 
 internal sealed class Evaluator
 {
-	private readonly BoundStatement _root;
+	private readonly BoundBlockStatement _root;
 	private readonly Dictionary<VariableSymbol, object?> _variables;
 	private object? _lastValue;
 
-	public Evaluator(BoundStatement root, Dictionary<VariableSymbol, object?> variables)
+	public Evaluator(BoundBlockStatement root, Dictionary<VariableSymbol, object?> variables)
 	{
 		_root = root;
 		_variables = variables;
@@ -16,43 +16,59 @@ internal sealed class Evaluator
 
 	public object? Evaluate()
 	{
-		EvaluateStatement(_root);
-		return _lastValue;
-	}
+		Dictionary<LabelSymbol, int> labelToIndex = new Dictionary<LabelSymbol, int>();
 
-	private void EvaluateStatement(BoundStatement node)
-	{
-		switch (node.Kind)
+		for (int i = 0; i < _root.Statements.Length; i++)
 		{
-			case BoundNodeKind.BlockStatement:
-				EvaluateBlockStatement((BoundBlockStatement) node);
-				break;
-
-			case BoundNodeKind.VariableDeclaration:
-				EvaluateVariableDeclaration((BoundVariableDeclaration) node);
-				break;
-
-			case BoundNodeKind.IfStatement:
-				EvaluateIfStatement((BoundIfStatement) node);
-				break;
-
-			case BoundNodeKind.WhileStatement:
-				EvaluateWhileStatement((BoundWhileStatement) node);
-				break;
-
-			case BoundNodeKind.ExpressionStatement:
-				EvaluateExpressionStatement((BoundExpressionStatement) node);
-				break;
-
-			default:
-				throw new Exception($"Unexpected node {node.Kind}");
+			if (_root.Statements[i] is BoundLabelStatement l)
+				labelToIndex.Add(l.Label, i + 1);
 		}
-	}
 
-	private void EvaluateBlockStatement(BoundBlockStatement node)
-	{
-		foreach (var statement in node.Statements)
-			EvaluateStatement(statement);
+		int index = 0;
+
+		while (index < _root.Statements.Length)
+		{
+			BoundStatement statement = _root.Statements[index];
+
+			switch (statement.Kind)
+			{
+				case BoundNodeKind.VariableDeclaration:
+					EvaluateVariableDeclaration((BoundVariableDeclaration) statement);
+					index++;
+					break;
+
+				case BoundNodeKind.ExpressionStatement:
+					EvaluateExpressionStatement((BoundExpressionStatement) statement);
+					index++;
+					break;
+
+				case BoundNodeKind.GotoStatement:
+					BoundGotoStatement gotoStatement = (BoundGotoStatement) statement;
+					index = labelToIndex[gotoStatement.Label];
+					break;
+
+				case BoundNodeKind.ConditionalGotoStatement:
+					BoundConditionalGotoStatement conditionalGotoStatement = (BoundConditionalGotoStatement) statement;
+					bool condition = (bool) (EvaluateExpression(conditionalGotoStatement.Condition) ?? throw new ArgumentNullException(nameof(EvaluateExpression)));
+
+					if (condition && !conditionalGotoStatement.JumpIfFalse || !condition && conditionalGotoStatement.JumpIfFalse)
+						index = labelToIndex[conditionalGotoStatement.Label];
+
+					else
+						index++;
+
+					break;
+
+				case BoundNodeKind.LabelStatement:
+					index++;
+					break;
+
+				default:
+					throw new Exception($"Unexpected node {statement.Kind}");
+			}
+		}
+
+		return _lastValue;
 	}
 
 	private void EvaluateVariableDeclaration(BoundVariableDeclaration node)
@@ -60,21 +76,6 @@ internal sealed class Evaluator
 		object? value = EvaluateExpression(node.Initializer);
 		_variables[node.Variable] = value;
 		_lastValue = value;
-	}
-
-	private void EvaluateIfStatement(BoundIfStatement node)
-	{
-		if ((bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition))))
-			EvaluateStatement(node.ThenStatement);
-
-		else if (node.ElseStatement != null)
-			EvaluateStatement(node.ElseStatement);
-	}
-
-	private void EvaluateWhileStatement(BoundWhileStatement node)
-	{
-		while ((bool) (EvaluateExpression(node.Condition) ?? throw new ArgumentNullException(nameof(node.Condition))))
-			EvaluateStatement(node.Body);
 	}
 
 	private void EvaluateExpressionStatement(BoundExpressionStatement node) => _lastValue = EvaluateExpression(node.Expression);
