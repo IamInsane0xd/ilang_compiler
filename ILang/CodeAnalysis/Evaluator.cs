@@ -51,7 +51,7 @@ internal sealed class Evaluator
 					BoundConditionalGotoStatement conditionalGotoStatement = (BoundConditionalGotoStatement) statement;
 					bool condition = (bool) (EvaluateExpression(conditionalGotoStatement.Condition) ?? throw new ArgumentNullException(nameof(EvaluateExpression)));
 
-					if (condition && !conditionalGotoStatement.JumpIfFalse || !condition && conditionalGotoStatement.JumpIfFalse)
+					if (condition == conditionalGotoStatement.JumpIfTrue)
 						index = labelToIndex[conditionalGotoStatement.Label];
 
 					else

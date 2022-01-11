@@ -84,7 +84,7 @@ internal sealed class Lowerer : BoundTreeRewriter
 		if (node.ElseStatement == null)
 		{
 			LabelSymbol endLabel = GenerateLabel();
-			BoundConditionalGotoStatement gotoFalse = new BoundConditionalGotoStatement(endLabel, node.Condition, true);
+			BoundConditionalGotoStatement gotoFalse = new BoundConditionalGotoStatement(endLabel, node.Condition, false);
 			BoundLabelStatement endLabelStatelemt = new BoundLabelStatement(endLabel);
 			BoundBlockStatement result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(gotoFalse, node.ThenStatement, endLabelStatelemt));
 
@@ -95,7 +95,7 @@ internal sealed class Lowerer : BoundTreeRewriter
 		{
 			LabelSymbol elseLabel = GenerateLabel();
 			LabelSymbol endLabel = GenerateLabel();
-			BoundConditionalGotoStatement gotoFalse = new BoundConditionalGotoStatement(elseLabel, node.Condition, true);
+			BoundConditionalGotoStatement gotoFalse = new BoundConditionalGotoStatement(elseLabel, node.Condition, false);
 			BoundGotoStatement gotoEndStatement = new BoundGotoStatement(endLabel);
 			BoundLabelStatement elseLabelStatelemt = new BoundLabelStatement(elseLabel);
 			BoundLabelStatement endLabelStatelemt = new BoundLabelStatement(endLabel);
@@ -137,7 +137,7 @@ internal sealed class Lowerer : BoundTreeRewriter
 		BoundGotoStatement gotoCheck = new BoundGotoStatement(checkLabel);
 		BoundLabelStatement continueLabelStatement = new BoundLabelStatement(continueLabel);
 		BoundLabelStatement checkLabelStatement = new BoundLabelStatement(checkLabel);
-		BoundConditionalGotoStatement gotoTrue = new BoundConditionalGotoStatement(continueLabel, node.Condition, false);
+		BoundConditionalGotoStatement gotoTrue = new BoundConditionalGotoStatement(continueLabel, node.Condition);
 		BoundLabelStatement endLabelStatement = new BoundLabelStatement(endLabel);
 		BoundBlockStatement result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(
 			gotoCheck,
