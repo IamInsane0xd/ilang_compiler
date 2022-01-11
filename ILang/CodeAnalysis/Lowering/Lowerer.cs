@@ -161,7 +161,9 @@ internal sealed class Lowerer : BoundTreeRewriter
 		 * 
 		 * {
 		 *   var <var> = <lower>
-		 *   while <var> <= <upper>
+		 *   let upperBound = <upper>
+		 *   
+		 *   while <var> <= upperBound
 		 *   {
 		 *     <body>
 		 *     <var> = <var> + 1
@@ -171,10 +173,12 @@ internal sealed class Lowerer : BoundTreeRewriter
 
 		BoundVariableDeclaration variableDeclaration = new BoundVariableDeclaration(node.Variable, node.LowerBound);
 		BoundVariableExpression variableExpression = new BoundVariableExpression(node.Variable);
+		VariableSymbol upperBoundSymbol = new VariableSymbol("upperBound", true, typeof(int));
+		BoundVariableDeclaration upperBoundDeclaration = new BoundVariableDeclaration(upperBoundSymbol, node.UpperBound);
 		BoundBinaryExpression condition = new BoundBinaryExpression(
 			variableExpression,
 			(BoundBinaryOperator.Bind(SyntaxKind.LessOrEqualsToken, typeof(int), typeof(int))) ?? throw new ArgumentNullException("op"),
-			node.UpperBound
+			new BoundVariableExpression(upperBoundSymbol)
 		);
 		BoundExpressionStatement increment = new BoundExpressionStatement(
 			new BoundAssignmentExpression(
@@ -188,7 +192,7 @@ internal sealed class Lowerer : BoundTreeRewriter
 		);
 		BoundBlockStatement whileBody = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(node.Body, increment));
 		BoundWhileStatement whileStatement = new BoundWhileStatement(condition, whileBody);
-		BoundBlockStatement result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(variableDeclaration, whileStatement));
+		BoundBlockStatement result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(variableDeclaration, upperBoundDeclaration, whileStatement));
 
 		return RewriteStatement(result);
 	}
