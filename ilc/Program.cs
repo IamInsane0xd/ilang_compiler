@@ -72,8 +72,6 @@ internal static class Program
 				continue;
 
 			Compilation compilation = previous == null ? new Compilation(syntaxTree) : previous.ContinueWith(syntaxTree);
-			EvaluationResult result = compilation.Evaluate(variables);
-			ImmutableArray<Diagnostic> diagnostics = result.Diagnostics;
 
 			if (showTree)
 			{
@@ -92,7 +90,11 @@ internal static class Program
 				compilation.EmitTree(Console.Out);
 			}
 
-			if (!diagnostics.Any())
+			Console.ResetColor();
+
+			EvaluationResult result = compilation.Evaluate(variables);
+
+			if (!result.Diagnostics.Any())
 			{
 				Console.ForegroundColor = ConsoleColor.Magenta;
 				Console.WriteLine(result.Value);
@@ -104,7 +106,7 @@ internal static class Program
 
 			else
 			{
-				foreach (Diagnostic? diagnostic in diagnostics)
+				foreach (Diagnostic? diagnostic in result.Diagnostics)
 				{
 					int lineIndex = syntaxTree.Text.GetLineIndex(diagnostic.Span.Start);
 					TextLine line = syntaxTree.Text.Lines[lineIndex];
