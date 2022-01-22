@@ -112,8 +112,7 @@ internal sealed class Evaluator
 
 	private object EvaluateUnaryExpression(BoundUnaryExpression u)
 	{
-		object operand;
-		operand = EvaluateExpression(u.Operand) ?? throw new ArgumentNullException(nameof(operand));
+		object operand = EvaluateExpression(u.Operand) ?? throw new ArgumentNullException(nameof(operand));
 
 		return u.Op.Kind switch
 		{

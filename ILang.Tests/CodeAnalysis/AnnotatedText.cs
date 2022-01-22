@@ -40,7 +40,7 @@ internal sealed class AnnotatedText
 
 					int start = startStack.Pop();
 					int end = position;
-					TextSpan span = TextSpan.FormBounds(start, end);
+					TextSpan span = TextSpan.FromBounds(start, end);
 					spanBuilder.Add(span);
 					break;
 

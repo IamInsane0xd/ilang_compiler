@@ -13,7 +13,7 @@ public abstract class SyntaxNode
 		{
 			TextSpan first = GetChildren().First().Span;
 			TextSpan last = GetChildren().Last().Span;
-			return TextSpan.FormBounds(first.Start, last.End);
+			return TextSpan.FromBounds(first.Start, last.End);
 		}
 	}
 
